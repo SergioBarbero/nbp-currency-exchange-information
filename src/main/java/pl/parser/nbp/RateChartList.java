@@ -5,35 +5,30 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class RateChartList {
 
-    private static RateChartList list = new RateChartList();
-
-    private final static String rateChartListUrl = "http://www.nbp.pl/kursy/xml/dir.txt";
+    private final static int limitYear = 2002;
+    private final static String rateChartListBaseUrl = "http://www.nbp.pl/kursy/xml/";
 
     private String[] filesNames;
 
-    private RateChartList(){
-        try {
-            URL listUrl = new URL(rateChartListUrl);
-            InputStream list = listUrl.openStream();
-            this.filesNames = new String(list.readAllBytes()).split("\r\n");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public RateChartList(int year) throws IOException {
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        URL listUrl;
+        if (year < limitYear || year > currentYear) {
+            throw new IllegalArgumentException("Please, introduce a valid year between 2002 and " + currentYear);
+        } else if (year < 2015) {
+            listUrl = new URL(rateChartListBaseUrl + "dir" + year + ".txt");
+        } else {
+            listUrl = new URL(rateChartListBaseUrl + "dir.txt");
         }
-    }
-
-    public static RateChartList getChartList() {
-        if(list == null) {
-            list = new RateChartList();
-        }
-        return list;
+        InputStream list = listUrl.openStream();
+        this.filesNames = new String(list.readAllBytes()).split("\r\n");
     }
 
     public String[] getNameList() {
