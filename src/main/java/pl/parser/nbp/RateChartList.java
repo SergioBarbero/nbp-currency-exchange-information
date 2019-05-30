@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RateChartList {
 
@@ -34,5 +38,17 @@ public class RateChartList {
 
     public String[] getNameList() {
         return this.filesNames;
+    }
+
+    /**
+     * Returns the sorted sublist from older to newer by type of file
+     * @param letter type of file
+     * @return empty array if the type was not identified, array with names in contrary case
+     */
+    public String[] getSortedSublist(char letter) {
+        List<String> sublist = Arrays.asList(this.getNameList()).stream().filter(fileName -> fileName.startsWith(String.valueOf(letter))).collect(Collectors.toList());
+        Collections.sort(sublist);
+        String[] sublistArray = new String[sublist.size()];
+        return sublist.toArray(sublistArray);
     }
 }
