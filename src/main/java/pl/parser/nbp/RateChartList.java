@@ -5,88 +5,63 @@ import java.io.InputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class RateChartList {
 
     private final static int limitYear = 2002;
-    private int year;
     private final static String rateChartListBaseUrl = "http://www.nbp.pl/kursy/xml/";
 
-    private String[] filesNames;
+    private SortedSet<String> filesNames;
 
+    /**
+     * Gets the closer fileName given the date parameter, this means, if exact file was not provided in specified date, the previous to it
+     * @param date specified date
+     * @param type letter of file
+     * @return name of the file
+     */
     public String getFileName(Date date, char type) {
         DateFormat df = new SimpleDateFormat("yyMMdd");
         String expeditionDate = df.format(date);
-        String letter = String.valueOf(type);
-        String regex = "^" + letter + ".*" + expeditionDate + "$";
-        return Arrays.stream(this.getFilesNames()).filter(fileName -> fileName.matches(regex)).collect(Collectors.toList()).get(0);
+        String dateCode = "000000";
+        String closerFileName = "";
+        Iterator<String> it = this.filesNames.iterator();
+        while (dateCode.compareTo(expeditionDate) < 0) {
+            String fileName = it.next();
+            dateCode = fileName.substring(fileName.length() - 6);
+            closerFileName = fileName;
+        }
+        return type + closerFileName.substring(1);
     }
 
     private static String buildUrl(int year) {
-        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        String url;
-        if (year < limitYear || year > currentYear) {
-            throw new IllegalArgumentException("Please, introduce a valid year between 2002 and " + currentYear);
-        } else if (year < 2015) {
-            url = rateChartListBaseUrl + "dir" + year + ".txt";
-        } else {
-            url = rateChartListBaseUrl + "dir.txt";
+        if (year < 2015) {
+            return rateChartListBaseUrl + "dir" + year + ".txt";
         }
-        return url;
+        return rateChartListBaseUrl + "dir.txt";
     }
 
-    public RateChartList(int year) throws IOException {
-        URL url = new URL(buildUrl(year));
-        this.year = year;
-        InputStream list = url.openStream();
-        this.filesNames = new String(list.readAllBytes()).split("\r\n");
+    private static SortedSet<String> retrieveList(int year) throws IOException {
+        String url = buildUrl(year);
+        String[] content = Utils.readFromUrl(url).split("\r\n");
+        return new TreeSet<>(Arrays.asList(content));
     }
 
-    public int getYear() {
-        return this.year;
-    }
-
-    public String[] getFilesNames() {
-        return this.filesNames;
-    }
-
-    public RateChartList sublist(String fromName, String toName) {
-        List filesNames = Arrays.asList(this.filesNames);
-        int bigger = fromName.compareTo(toName);
-        if (bigger > 0) {
-            throw new IllegalArgumentException("Final name must be bigger than starting name");
+    public RateChartList(int year1, int year2) {
+        if (year1 > limitYear || year2 > limitYear) {
+            throw new IllegalArgumentException();
         }
-        int index1 = filesNames.indexOf(fromName);
-        int index2 = filesNames.indexOf(toName);
-        if (index1 == -1 || index2 == -1) {
-            throw new ArrayIndexOutOfBoundsException();
+        int fromYear = Math.min(year1, year2);
+        int toYear = Math.max(year1, year2);
+        this.filesNames = new TreeSet<>();
+        for (int i = fromYear; i <= toYear; i++) {
+            try {
+                SortedSet<String> filesList = retrieveList(i);
+                this.filesNames.addAll(filesList);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        Arrays.sort(this.filesNames);
-        filesNames = filesNames.subList(index1, index2);
-        return new RateChartList(filesNames, this.year);
-    }
-
-    private RateChartList(List<String> filesNames, int year) {
-        String[] fileNamesArray = new String[filesNames.size()];
-        filesNames.toArray(fileNamesArray);
-        this.filesNames = fileNamesArray;
-        this.year = year;
-    }
-
-    /**
-     * Crops the list to the specified type
-     * @param type type of file
-     * @return empty array if the type was not identified, array with names in contrary case
-     */
-    public RateChartList byType(char type) {
-        List<String> sublist = Arrays.stream(this.getFilesNames()).filter(fileName -> fileName.startsWith(String.valueOf(type))).collect(Collectors.toList());
-        return new RateChartList(sublist, this.year);
-    }
-
-    private void setFilesNames(String[] filesNames) {
-        this.filesNames = filesNames;
     }
 }

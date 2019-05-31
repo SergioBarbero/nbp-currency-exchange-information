@@ -2,57 +2,62 @@ package pl.parser.nbp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class MainClass {
 
-    private final static String baseUrl = "http://www.nbp.pl/kursy/xml/";
 
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-mm-dd", Locale.ENGLISH);
+    private static DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
 
-    public static void main(String [] args) throws MalformedURLException {
-        //String currencyCode = args[0];
-        //LocalDate startingDate = LocalDate.parse(args[1], formatter);
-        //LocalDate endingDate = LocalDate.parse(args[2], formatter);
+    private static Calendar calendar = new GregorianCalendar();
 
-        //int startYear = startingDate.getYear();
-        int startYear = 2002;
-        //int endYear = endingDate.getYear();
-        int endYear = 2002;
-        RateChartList startList = null;
-        RateChartList endList = null;
+    public static void main(String [] args) throws MalformedURLException, ParseException {
+        DescriptiveStatistics mean = new DescriptiveStatistics();
+        DescriptiveStatistics deviation = new DescriptiveStatistics();
 
-        try {
-            startList = new RateChartList(startYear);
-            endList = new RateChartList(endYear);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String currencyCode = args[0];
+        Date startingDate = formatter.parse(args[1]);
+        Date endingDate = formatter.parse(args[2]);
+
+        int startYear = startingDate.getYear();
+        int endYear = endingDate.getYear();
+
+        SortedSet<String> filesNames = new TreeSet<>();
+
+        RateChartList masterList = new RateChartList(startYear, endYear);
+        String startFileName = masterList.getFileName(startingDate, 'c');
+        String endFileName = masterList.getFileName(endingDate, 'c');
+
+        SortedSet<String> searchedList = filesNames.subSet(startFileName, endFileName);
+
+        for (String filename: searchedList) {
+            try {
+                RateChart chart = ChartFileParser.readXmlChartFile(filename);
+                Currency currencyRate = chart.getRateByCurrency(currencyCode);
+                float buyingRate = currencyRate.getBuyingRate();
+                float sellingRate = currencyRate.getSellingRate();
+                mean.addValue(buyingRate);
+                deviation.addValue(sellingRate);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        StandardDeviation sd = new StandardDeviation();
 
-        startList = startList.byType('c').sublist("c003z020104", "c007z020110");
+        double deviationResult = deviation.getStandardDeviation();
+        double meanRestult = deviation.getMean();
 
-
-        ObjectMapper xmlMapper = new XmlMapper();
-        RateChartList list = null;
-        try {
-            list = new RateChartList(startYear);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        URL u = new URL(baseUrl + "c073z070413.xml");
-        try (InputStream in = u.openStream()) {
-            String rateChartcontent = new String(in.readAllBytes());
-            RateChart rateChart = xmlMapper.readValue(rateChartcontent, RateChart.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println(deviationResult);
+        System.out.println(meanRestult);
     }
 }
