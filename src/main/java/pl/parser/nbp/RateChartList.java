@@ -22,7 +22,7 @@ public class RateChartList {
         String expeditionDate = df.format(date);
         String letter = String.valueOf(type);
         String regex = "^" + letter + ".*" + expeditionDate + "$";
-        return Arrays.stream(this.getNameList()).filter(fileName -> fileName.matches(regex)).collect(Collectors.toList()).get(0);
+        return Arrays.stream(this.getFilesNames()).filter(fileName -> fileName.matches(regex)).collect(Collectors.toList()).get(0);
     }
 
     private static String buildUrl(int year) {
@@ -49,7 +49,7 @@ public class RateChartList {
         return this.year;
     }
 
-    public String[] getNameList() {
+    public String[] getFilesNames() {
         return this.filesNames;
     }
 
@@ -66,10 +66,14 @@ public class RateChartList {
         }
         Arrays.sort(this.filesNames);
         filesNames = filesNames.subList(index1, index2);
-        String[] sublistArray = new String[filesNames.size()];
-        filesNames.toArray(sublistArray);
-        this.setFilesNames(sublistArray);
-        return this;
+        return new RateChartList(filesNames, this.year);
+    }
+
+    private RateChartList(List<String> filesNames, int year) {
+        String[] fileNamesArray = new String[filesNames.size()];
+        filesNames.toArray(fileNamesArray);
+        this.filesNames = fileNamesArray;
+        this.year = year;
     }
 
     /**
@@ -78,11 +82,8 @@ public class RateChartList {
      * @return empty array if the type was not identified, array with names in contrary case
      */
     public RateChartList byType(char type) {
-        List<String> sublist = Arrays.stream(this.getNameList()).filter(fileName -> fileName.startsWith(String.valueOf(type))).collect(Collectors.toList());
-        String[] sublistArray = new String[sublist.size()];
-        sublist.toArray(sublistArray);
-        this.setFilesNames(sublistArray);
-        return this;
+        List<String> sublist = Arrays.stream(this.getFilesNames()).filter(fileName -> fileName.startsWith(String.valueOf(type))).collect(Collectors.toList());
+        return new RateChartList(sublist, this.year);
     }
 
     private void setFilesNames(String[] filesNames) {
