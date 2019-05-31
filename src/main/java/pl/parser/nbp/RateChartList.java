@@ -25,18 +25,23 @@ public class RateChartList {
         return Arrays.stream(this.getNameList()).filter(fileName -> fileName.matches(regex)).collect(Collectors.toList()).get(0);
     }
 
-    public RateChartList(int year) throws IOException {
+    private static String buildUrl(int year) {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        URL listUrl;
+        String url;
         if (year < limitYear || year > currentYear) {
             throw new IllegalArgumentException("Please, introduce a valid year between 2002 and " + currentYear);
         } else if (year < 2015) {
-            listUrl = new URL(rateChartListBaseUrl + "dir" + year + ".txt");
+            url = rateChartListBaseUrl + "dir" + year + ".txt";
         } else {
-            listUrl = new URL(rateChartListBaseUrl + "dir.txt");
+            url = rateChartListBaseUrl + "dir.txt";
         }
+        return url;
+    }
+
+    public RateChartList(int year) throws IOException {
+        URL url = new URL(buildUrl(year));
         this.year = year;
-        InputStream list = listUrl.openStream();
+        InputStream list = url.openStream();
         this.filesNames = new String(list.readAllBytes()).split("\r\n");
     }
 
