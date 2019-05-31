@@ -18,6 +18,7 @@ public class MainClass {
 
 
     private static DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+    private static SimpleDateFormat yearFormatter = new SimpleDateFormat("yyyy");
 
     private static Calendar calendar = new GregorianCalendar();
 
@@ -29,16 +30,14 @@ public class MainClass {
         Date startingDate = formatter.parse(args[1]);
         Date endingDate = formatter.parse(args[2]);
 
-        int startYear = startingDate.getYear();
-        int endYear = endingDate.getYear();
-
-        SortedSet<String> filesNames = new TreeSet<>();
+        int startYear = Integer.parseInt(yearFormatter.format(startingDate));
+        int endYear = Integer.parseInt(yearFormatter.format(endingDate));
 
         RateChartList masterList = new RateChartList(startYear, endYear);
         String startFileName = masterList.getFileName(startingDate, 'c');
         String endFileName = masterList.getFileName(endingDate, 'c');
 
-        SortedSet<String> searchedList = filesNames.subSet(startFileName, endFileName);
+        SortedSet<String> searchedList = masterList.getFilesNames().subSet(startFileName, endFileName);
 
         for (String filename: searchedList) {
             try {

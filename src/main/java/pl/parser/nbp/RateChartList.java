@@ -48,8 +48,12 @@ public class RateChartList {
         return new TreeSet<>(Arrays.asList(content));
     }
 
+    public SortedSet<String> getFilesNames() {
+        return filesNames;
+    }
+
     public RateChartList(int year1, int year2) {
-        if (year1 > limitYear || year2 > limitYear) {
+        if (year1 < limitYear || year2 < limitYear) {
             throw new IllegalArgumentException();
         }
         int fromYear = Math.min(year1, year2);
