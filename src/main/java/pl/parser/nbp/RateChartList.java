@@ -36,10 +36,7 @@ public class RateChartList {
     }
 
     private static String buildUrl(int year) {
-        if (year < 2015) {
-            return rateChartListBaseUrl + "dir" + year + ".txt";
-        }
-        return rateChartListBaseUrl + "dir.txt";
+        return (year < 2015) ? rateChartListBaseUrl + "dir" + year + ".txt" : rateChartListBaseUrl + "dir.txt";
     }
 
     private static SortedSet<String> retrieveList(int year) throws IOException {
