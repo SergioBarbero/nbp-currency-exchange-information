@@ -8,7 +8,7 @@ import java.util.*;
 public class MainClass {
 
 
-    private static DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+    private static DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     private static SimpleDateFormat yearFormatter = new SimpleDateFormat("yyyy");
     private static String[] allowedCurrencyCodes = { "USD", "EUR", "CHF", "GBP" };
 
