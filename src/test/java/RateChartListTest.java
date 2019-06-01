@@ -1,5 +1,5 @@
 import org.junit.jupiter.api.Test;
-import pl.parser.nbp.RateChart;
+import pl.parser.nbp.ChartFile;
 import pl.parser.nbp.RateChartList;
 
 import java.util.Date;
@@ -11,10 +11,10 @@ class RateChartListTest {
     private RateChartList list = new RateChartList(2019, 2019);
 
     @Test
-    void getFileNameTest() {
+    void findFileTest() {
         long time = 1546473600000L;
-        String filename = list.getFileName(new Date(time), 'c');
-        assertEquals("c002z190103", filename);
+        ChartFile filename = list.findFile(new Date(time), 'c');
+        assertEquals("c002z190103", filename.getFileName());
     }
 
     @Test
