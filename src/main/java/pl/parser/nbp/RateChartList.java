@@ -50,9 +50,7 @@ public class RateChartList {
         for (int i = fromYear; i <= toYear; i++) {
             try {
                 SortedSet<String> filesList = retrieveList(i);
-                for(String fileName: filesList) {
-                    this.files.add(new ChartFile(fileName));
-                }
+                filesList.forEach(fileName -> this.files.add(new ChartFile(fileName)));
             } catch (IOException e) {
                 e.printStackTrace();
             }
