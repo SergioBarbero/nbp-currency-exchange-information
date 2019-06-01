@@ -1,5 +1,9 @@
 package pl.parser.nbp;
 
+import pl.parser.nbp.ChartFile.ChartFile;
+import pl.parser.nbp.ChartFile.ChartFileBucket;
+import pl.parser.nbp.Util.MathStatistics;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,7 +37,7 @@ public class MainClass {
         int startYear = Integer.parseInt(yearFormatter.format(startingDate));
         int endYear = Integer.parseInt(yearFormatter.format(endingDate));
 
-        RateChartList masterList = new RateChartList(startYear, endYear);
+        ChartFileBucket masterList = new ChartFileBucket(startYear, endYear);
         ChartFile startFileName = masterList.findFile(startingDate, 'c');
         ChartFile endFileName = masterList.findFile(endingDate, 'c');
 

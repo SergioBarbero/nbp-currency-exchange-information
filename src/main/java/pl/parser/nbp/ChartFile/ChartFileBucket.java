@@ -1,4 +1,5 @@
-package pl.parser.nbp;
+package pl.parser.nbp.ChartFile;
+import pl.parser.nbp.Util.Utils;
 
 import java.io.IOException;
 
@@ -6,7 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class RateChartList {
+public class ChartFileBucket {
 
     private final static int limitYear = 2002;
     private final static String rateChartListBaseUrl = "http://www.nbp.pl/kursy/xml/";
@@ -40,7 +41,7 @@ public class RateChartList {
         return files;
     }
 
-    public RateChartList(int year1, int year2) {
+    public ChartFileBucket(int year1, int year2) {
         if (year1 < limitYear || year2 < limitYear) {
             throw new IllegalArgumentException();
         }

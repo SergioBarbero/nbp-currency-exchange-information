@@ -1,4 +1,4 @@
-package pl.parser.nbp;
+package pl.parser.nbp.RateChart;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 

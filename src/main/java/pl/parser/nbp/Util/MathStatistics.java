@@ -1,4 +1,4 @@
-package pl.parser.nbp;
+package pl.parser.nbp.Util;
 
 import java.util.stream.DoubleStream;
 

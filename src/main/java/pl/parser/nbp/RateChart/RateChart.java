@@ -1,4 +1,4 @@
-package pl.parser.nbp;
+package pl.parser.nbp.RateChart;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;

@@ -1,7 +1,9 @@
-package pl.parser.nbp;
+package pl.parser.nbp.ChartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import pl.parser.nbp.RateChart.RateChart;
+import pl.parser.nbp.Util.Utils;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package pl.parser.nbp;
+package pl.parser.nbp.RateChart;
 
 import java.io.IOException;
 import com.fasterxml.jackson.core.JsonParser;
