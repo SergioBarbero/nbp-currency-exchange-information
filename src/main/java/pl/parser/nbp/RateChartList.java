@@ -24,15 +24,10 @@ public class RateChartList {
     public String getFileName(Date date, char type) {
         DateFormat df = new SimpleDateFormat("yyMMdd");
         String expeditionDate = df.format(date);
-        String dateCode = "000000";
-        String closerFileName = "";
-        Iterator<String> it = this.filesNames.iterator();
-        while (dateCode.compareTo(expeditionDate) < 0) {
-            String fileName = it.next();
-            dateCode = fileName.substring(fileName.length() - 6);
-            closerFileName = fileName;
-        }
-        return type + closerFileName.substring(1);
+        NavigableSet<String> dateList = this.filesNames.stream().map(name -> name.substring(name.length() - 6 )).collect(Collectors.toCollection(TreeSet::new));
+        String closestFile = dateList.floor(expeditionDate);
+        String regex = "^" + type + ".*" + closestFile + "$";
+        return this.filesNames.stream().filter(name -> name.matches(regex)).findFirst().get();
     }
 
     private static String buildUrl(int year) {
