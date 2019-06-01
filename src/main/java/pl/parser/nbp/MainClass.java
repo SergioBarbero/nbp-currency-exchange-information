@@ -1,14 +1,7 @@
 package pl.parser.nbp;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,9 +13,7 @@ public class MainClass {
     private static DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
     private static SimpleDateFormat yearFormatter = new SimpleDateFormat("yyyy");
 
-    private static Calendar calendar = new GregorianCalendar();
-
-    public static void main(String [] args) throws MalformedURLException, ParseException {
+    public static void main(String [] args) throws ParseException {
         DescriptiveStatistics mean = new DescriptiveStatistics();
         DescriptiveStatistics deviation = new DescriptiveStatistics();
 
@@ -40,23 +31,17 @@ public class MainClass {
         SortedSet<String> searchedList = masterList.getFilesNames().subSet(startFileName, endFileName);
 
         for (String filename: searchedList) {
-            try {
-                RateChart chart = ChartFileParser.readXmlChartFile(filename);
-                Currency currencyRate = chart.getRateByCurrency(currencyCode);
-                float buyingRate = currencyRate.getBuyingRate();
-                float sellingRate = currencyRate.getSellingRate();
-                mean.addValue(buyingRate);
-                deviation.addValue(sellingRate);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            RateChart chart = ChartFileParser.readXmlChartFile(filename);
+            Currency currencyRate = chart.getRateByCurrency(currencyCode);
+            float buyingRate = currencyRate.getBuyingRate();
+            float sellingRate = currencyRate.getSellingRate();
+            mean.addValue(buyingRate);
+            deviation.addValue(sellingRate);
         }
-        StandardDeviation sd = new StandardDeviation();
-
         double deviationResult = deviation.getStandardDeviation();
-        double meanRestult = deviation.getMean();
+        double meanResult = deviation.getMean();
 
+        System.out.println(meanResult);
         System.out.println(deviationResult);
-        System.out.println(meanRestult);
     }
 }

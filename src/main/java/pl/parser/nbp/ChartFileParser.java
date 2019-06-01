@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 public class ChartFileParser {
 
     private final static String baseUrl = "http://www.nbp.pl/kursy/xml/";
     private static ObjectMapper xmlMapper = new XmlMapper();
 
-    public static RateChart readXmlChartFile(String filename) throws MalformedURLException {
+    public static RateChart readXmlChartFile(String filename) {
         String url = baseUrl + filename + ".xml";
         RateChart rateChart;
         try {

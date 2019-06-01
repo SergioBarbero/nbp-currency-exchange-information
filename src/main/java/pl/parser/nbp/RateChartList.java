@@ -1,8 +1,7 @@
 package pl.parser.nbp;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -30,7 +29,7 @@ public class RateChartList {
         return this.filesNames.stream().filter(name -> name.matches(regex)).findFirst().get();
     }
 
-    private static String buildUrl(int year) {
+    public static String buildUrl(int year) {
         return (year < 2015) ? rateChartListBaseUrl + "dir" + year + ".txt" : rateChartListBaseUrl + "dir.txt";
     }
 

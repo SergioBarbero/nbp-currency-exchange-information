@@ -11,6 +11,9 @@ public class RateChart {
     @JsonProperty("typ")
     private char type;
 
+    @JsonProperty("uid")
+    private String uid;
+
     @JsonProperty("numer_tabeli")
     private String chartNumber;
 

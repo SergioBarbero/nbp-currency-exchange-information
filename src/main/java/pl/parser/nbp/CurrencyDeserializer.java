@@ -19,7 +19,7 @@ public class CurrencyDeserializer extends StdDeserializer<Currency> {
     }
 
     @Override
-    public Currency deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Currency deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         JsonNode node = p.getCodec().readTree(p);
         String currencyName;
         int base;
