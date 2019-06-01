@@ -23,17 +23,15 @@ public class MainClass {
         ChartFile startFileName = masterList.findFile(startingDate, 'c');
         ChartFile endFileName = masterList.findFile(endingDate, 'c');
 
-        NavigableSet<ChartFile> searchedList = masterList.getFilesNames().subSet(startFileName, true, endFileName, true);
+        NavigableSet<ChartFile> searchedList = masterList.getFiles().subSet(startFileName, true, endFileName, true);
 
-        for (ChartFile file: searchedList) {
-            file.load();
-        }
+        searchedList.forEach(ChartFile::load);
         double[] sellingRates = searchedList.stream().mapToDouble(e -> e.getChart().getRateByCurrency(currencyCode).getSellingRate()).toArray();
         double[] buyingRates = searchedList.stream().mapToDouble(e -> e.getChart().getRateByCurrency(currencyCode).getBuyingRate()).toArray();
         double meanResult = MathStatistics.avg(buyingRates);
         double deviationResult = MathStatistics.stdDeviation(sellingRates);
 
-        System.out.println(meanResult);
-        System.out.println(deviationResult);
+        System.out.println(String.format("%.4f", meanResult));
+        System.out.println(String.format("%.4f", deviationResult));
     }
 }

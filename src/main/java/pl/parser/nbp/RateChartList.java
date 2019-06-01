@@ -36,7 +36,7 @@ public class RateChartList {
         return new TreeSet<>(Arrays.asList(content));
     }
 
-    public NavigableSet<ChartFile> getFilesNames() {
+    public NavigableSet<ChartFile> getFiles() {
         return files;
     }
 

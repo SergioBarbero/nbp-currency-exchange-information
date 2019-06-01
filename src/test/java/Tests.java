@@ -6,7 +6,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class RateChartListTest {
+class Tests {
 
     private RateChartList list = new RateChartList(2019, 2019);
 
