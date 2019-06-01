@@ -10,11 +10,25 @@ public class MainClass {
 
     private static DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
     private static SimpleDateFormat yearFormatter = new SimpleDateFormat("yyyy");
+    private static String[] allowedCurrencyCodes = { "USD", "EUR", "CHF", "GBP" };
+
 
     public static void main(String [] args) throws ParseException {
+        if (args.length < 3) {
+            throw new IllegalArgumentException("Please, pass all needed arguments");
+        }
+
+        if (args.length > 3) {
+            throw new IllegalArgumentException("Too many arguments");
+        }
+
         String currencyCode = args[0];
         Date startingDate = formatter.parse(args[1]);
         Date endingDate = formatter.parse(args[2]);
+
+        if (!Arrays.asList(allowedCurrencyCodes).contains(currencyCode)) {
+            throw new IllegalArgumentException("Currency not supported");
+        }
 
         int startYear = Integer.parseInt(yearFormatter.format(startingDate));
         int endYear = Integer.parseInt(yearFormatter.format(endingDate));
