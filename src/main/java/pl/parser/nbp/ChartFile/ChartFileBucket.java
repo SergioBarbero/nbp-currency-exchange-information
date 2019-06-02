@@ -31,7 +31,7 @@ public class ChartFileBucket {
         return (year < 2015) ? rateChartListBaseUrl + "dir" + year + ".txt" : rateChartListBaseUrl + "dir.txt";
     }
 
-    private static SortedSet<String> retrieveList(int year) throws IOException {
+    private static NavigableSet<String> retrieveList(int year) throws IOException {
         String url = buildUrl(year);
         String[] content = Utils.readFromUrl(url).split("\r\n");
         return new TreeSet<>(Arrays.asList(content));
@@ -50,7 +50,7 @@ public class ChartFileBucket {
         this.files = new TreeSet<>();
         for (int i = fromYear; i <= toYear; i++) {
             try {
-                SortedSet<String> filesList = retrieveList(i);
+                NavigableSet<String> filesList = retrieveList(i);
                 filesList.forEach(fileName -> this.files.add(new ChartFile(fileName)));
             } catch (IOException e) {
                 e.printStackTrace();

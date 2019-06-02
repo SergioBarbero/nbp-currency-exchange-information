@@ -18,21 +18,19 @@ public class MainClass {
 
 
     public static void main(String [] args) throws ParseException {
-        if (args.length < 3) {
-            throw new IllegalArgumentException("Please, pass all needed arguments");
-        }
-
-        if (args.length > 3) {
-            throw new IllegalArgumentException("Too many arguments");
+        try {
+            validateArguments(args);
+        } catch (NullPointerException e) {
+            System.out.println("Please, pass all needed arguments");
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Too many arguments");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Currency not supported");
         }
 
         String currencyCode = args[0];
         Date startingDate = formatter.parse(args[1]);
         Date endingDate = formatter.parse(args[2]);
-
-        if (!Arrays.asList(allowedCurrencyCodes).contains(currencyCode)) {
-            throw new IllegalArgumentException("Currency not supported");
-        }
 
         int startYear = Integer.parseInt(yearFormatter.format(startingDate));
         int endYear = Integer.parseInt(yearFormatter.format(endingDate));
@@ -51,5 +49,18 @@ public class MainClass {
 
         System.out.println(String.format("%.4f", meanResult));
         System.out.println(String.format("%.4f", deviationResult));
+    }
+
+    private static void validateArguments(String[] args) throws NullPointerException, IndexOutOfBoundsException, IllegalArgumentException{
+        if (args.length < 3) {
+            throw new NullPointerException("Please, pass all needed arguments");
+        }
+        if (args.length > 3) {
+            throw new IndexOutOfBoundsException("Too many arguments");
+        }
+        String currencyCode = args[0];
+        if (!Arrays.asList(allowedCurrencyCodes).contains(currencyCode)) {
+            throw new IllegalArgumentException("Currency not supported");
+        }
     }
 }
