@@ -6,18 +6,37 @@ import pl.parser.nbp.RateChart.RateChart;
 import pl.parser.nbp.Util.Utils;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ChartFile implements Comparable<ChartFile> {
 
     private final static String baseUrl = "http://www.nbp.pl/kursy/xml/";
     private static ObjectMapper xmlMapper = new XmlMapper();
+    private static DateFormat publicationDateFormat = new SimpleDateFormat("yyMMdd");
 
-    private String fileName;
+    private static char commonLetter = 'z';
+    private String tableReference;
+    private Date publicationDate;
+    private char type;
 
     private RateChart chart;
 
     public ChartFile(String fileName) {
-        this.fileName = fileName;
+        String formattedDate = fileName.substring(fileName.length() - 6);
+        try {
+            this.publicationDate = publicationDateFormat.parse(formattedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        this.type = fileName.charAt(0);
+        this.tableReference = fileName.substring(1, 4);
+    }
+
+    public String getFileName() {
+        return this.type + this.tableReference + commonLetter + publicationDateFormat.format(this.publicationDate);
     }
 
     public void load() {
@@ -30,19 +49,15 @@ public class ChartFile implements Comparable<ChartFile> {
     }
 
     public String getUrl() {
-        return baseUrl + this.fileName + ".xml";
+        return baseUrl + this.getFileName() + ".xml";
     }
 
     public RateChart getChart() {
         return chart;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
     @Override
     public int compareTo(ChartFile o) {
-        return fileName.compareTo(o.fileName);
+        return this.getFileName().compareTo(o.getFileName());
     }
 }
