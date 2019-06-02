@@ -23,7 +23,7 @@ public class ChartFileBucket {
     public ChartFile findFile(Date date, char type) {
         DateFormat df = new SimpleDateFormat("yyMMdd");
         String expeditionDate = df.format(date);
-        String regex = "^" + type + ".*" + expeditionDate + "$";
+        String regex = String.format("^%s.*%s$", type, expeditionDate);
         return this.files.stream().filter(e -> e.getFileName().matches(regex)).findFirst().get();
     }
 
