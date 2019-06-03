@@ -39,7 +39,7 @@ public class MainClass {
         ChartFile startFileName = masterList.findFile(startingDate, 'c');
         ChartFile endFileName = masterList.findFile(endingDate, 'c');
 
-        NavigableSet<ChartFile> searchedList = masterList.getFiles().subSet(startFileName, true, endFileName, true);
+        NavigableSet<ChartFile> searchedList = masterList.filterByType('c').subSet(startFileName, true, endFileName, true);
 
         searchedList.forEach(ChartFile::load);
         double[] sellingRates = searchedList.stream().mapToDouble(e -> e.getChart().getRateByCurrency(currencyCode).getSellingRate()).toArray();

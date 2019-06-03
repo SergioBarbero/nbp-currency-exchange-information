@@ -25,7 +25,7 @@ public class ChartFileBucket {
      */
     public ChartFile findFile(Date date, char type) {
         DateFormat df = new SimpleDateFormat("yyMMdd");
-        TreeSet<Date> dates = this.files.stream().map(ChartFile::getPublicationDate).collect(Collectors.toCollection(TreeSet::new));
+        TreeSet<Date> dates = this.files.stream().filter(e -> e.getType() == type).map(ChartFile::getPublicationDate).collect(Collectors.toCollection(TreeSet::new));
         String closest = df.format(dates.floor(date));
         String regex = String.format("^%s.*%s$", type, closest);
         return this.files.stream().filter(e -> e.getFileName().matches(regex)).findFirst().get();
@@ -44,6 +44,10 @@ public class ChartFileBucket {
 
     public NavigableSet<ChartFile> getFiles() {
         return files;
+    }
+
+    public NavigableSet<ChartFile> filterByType(char type) {
+        return this.files.stream().filter(e -> e.getType() == type).collect(Collectors.toCollection(TreeSet::new));
     }
 
     public ChartFileBucket(int year1, int year2) {

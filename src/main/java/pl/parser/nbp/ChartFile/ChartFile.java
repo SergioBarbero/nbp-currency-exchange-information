@@ -35,6 +35,10 @@ public class ChartFile implements Comparable<ChartFile> {
         return this.type + this.tableReference + commonLetter + publicationDateFormat.format(this.publicationDate);
     }
 
+    public char getType() {
+        return this.type;
+    }
+
     public Date getPublicationDate() {
         return this.publicationDate;
     }
@@ -58,10 +62,7 @@ public class ChartFile implements Comparable<ChartFile> {
 
     @Override
     public int compareTo(ChartFile o) {
-        int dateEqual = this.getPublicationDate().compareTo(o.getPublicationDate());
-        if (dateEqual == 0) {
-            return String.valueOf(type).compareTo(String.valueOf(o.type));
-        }
-        return dateEqual;
+        int dateComparison = this.getPublicationDate().compareTo(o.getPublicationDate());
+        return dateComparison == 0 ? String.valueOf(type).compareTo(String.valueOf(o.type)) : dateComparison;
     }
 }
