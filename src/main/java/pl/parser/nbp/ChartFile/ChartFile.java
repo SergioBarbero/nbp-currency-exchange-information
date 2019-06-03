@@ -24,19 +24,19 @@ public class ChartFile implements Comparable<ChartFile> {
 
     private RateChart chart;
 
-    public ChartFile(String fileName) {
+    public ChartFile(String fileName) throws ParseException {
         String formattedDate = fileName.substring(fileName.length() - 6);
-        try {
-            this.publicationDate = publicationDateFormat.parse(formattedDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        this.publicationDate = publicationDateFormat.parse(formattedDate);
         this.type = fileName.charAt(0);
         this.tableReference = fileName.substring(1, 4);
     }
 
     public String getFileName() {
         return this.type + this.tableReference + commonLetter + publicationDateFormat.format(this.publicationDate);
+    }
+
+    public Date getPublicationDate() {
+        return this.publicationDate;
     }
 
     public void load() {
@@ -58,6 +58,10 @@ public class ChartFile implements Comparable<ChartFile> {
 
     @Override
     public int compareTo(ChartFile o) {
-        return this.getFileName().compareTo(o.getFileName());
+        int dateEqual = this.getPublicationDate().compareTo(o.getPublicationDate());
+        if (dateEqual == 0) {
+            return String.valueOf(type).compareTo(String.valueOf(o.type));
+        }
+        return dateEqual;
     }
 }

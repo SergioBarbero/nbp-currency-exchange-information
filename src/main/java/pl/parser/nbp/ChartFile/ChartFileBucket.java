@@ -1,11 +1,14 @@
 package pl.parser.nbp.ChartFile;
+import com.sun.source.tree.Tree;
 import pl.parser.nbp.Util.Utils;
 
 import java.io.IOException;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ChartFileBucket {
 
@@ -22,13 +25,15 @@ public class ChartFileBucket {
      */
     public ChartFile findFile(Date date, char type) {
         DateFormat df = new SimpleDateFormat("yyMMdd");
-        String expeditionDate = df.format(date);
-        String regex = String.format("^%s.*%s$", type, expeditionDate);
+        TreeSet<Date> dates = this.files.stream().map(ChartFile::getPublicationDate).collect(Collectors.toCollection(TreeSet::new));
+        String closest = df.format(dates.floor(date));
+        String regex = String.format("^%s.*%s$", type, closest);
         return this.files.stream().filter(e -> e.getFileName().matches(regex)).findFirst().get();
     }
 
     public static String buildUrl(int year) {
-        return (year < 2015) ? rateChartListBaseUrl + "dir" + year + ".txt" : rateChartListBaseUrl + "dir.txt";
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        return (year == currentYear) ? rateChartListBaseUrl + "dir.txt" : rateChartListBaseUrl + "dir" + year + ".txt";
     }
 
     private static NavigableSet<String> retrieveList(int year) throws IOException {
@@ -51,8 +56,10 @@ public class ChartFileBucket {
         for (int i = fromYear; i <= toYear; i++) {
             try {
                 NavigableSet<String> filesList = retrieveList(i);
-                filesList.forEach(fileName -> this.files.add(new ChartFile(fileName)));
+                for (String fileName : filesList) this.files.add(new ChartFile(fileName));
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
