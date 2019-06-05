@@ -2,7 +2,7 @@ package pl.parser.nbp.ChartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import pl.parser.nbp.RateChart.RateChart;
+import pl.parser.nbp.RateChart.CurrencyRateChart;
 import pl.parser.nbp.Util.Utils;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class ChartFile implements Comparable<ChartFile> {
     private Date publicationDate;
     private char type;
 
-    private RateChart chart;
+    private CurrencyRateChart chart;
 
     public ChartFile(String fileName) throws ParseException {
         String formattedDate = fileName.substring(fileName.length() - 6);
@@ -46,7 +46,7 @@ public class ChartFile implements Comparable<ChartFile> {
     public void load() {
         try {
             String content = Utils.readFromUrl(this.getUrl());
-            this.chart = xmlMapper.readValue(content, RateChart.class);
+            this.chart = xmlMapper.readValue(content, CurrencyRateChart.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class ChartFile implements Comparable<ChartFile> {
         return baseUrl + this.getFileName() + ".xml";
     }
 
-    public RateChart getChart() {
+    public CurrencyRateChart getChart() {
         return chart;
     }
 

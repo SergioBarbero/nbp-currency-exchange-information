@@ -2,11 +2,12 @@ package pl.parser.nbp.RateChart;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import pl.parser.nbp.Currency.Currency;
 
 import java.util.Date;
 import java.util.List;
 
-public class RateChart {
+public class CurrencyRateChart {
 
     @JsonProperty("typ")
     private char type;
