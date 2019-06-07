@@ -33,9 +33,7 @@ public class CurrencyRateChartController {
         int startYear = Integer.parseInt(publicationDateFormat.format(startDate));
         int endYear = Integer.parseInt(publicationDateFormat.format(endDate));
         ChartFileBucket bucket = new ChartFileBucket(startYear, endYear);
-        ChartFile fileStart = bucket.findFile(startDate, type);
-        ChartFile fileEnd = bucket.findFile(endDate, type);
-        SortedSet<ChartFile> files = bucket.getFiles().subSet(fileStart, fileEnd);
+        SortedSet<ChartFile> files = bucket.filterList(type, startDate, endDate);
         files.forEach(ChartFile::load);
         return files.stream().filter(file -> file.getType() == 'c').map(ChartFile::getChart).collect(Collectors.toList());
     }

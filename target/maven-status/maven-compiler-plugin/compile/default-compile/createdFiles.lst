@@ -1,0 +1,12 @@
+pl\parser\nbp\CurrencyStatistics\RateStatistics.class
+pl\parser\nbp\CurrencyStatistics\CurrencyStatisticsController.class
+pl\parser\nbp\CurrencyStatistics\CurrencyStatistics.class
+pl\parser\nbp\Util\MathStatistics.class
+pl\parser\nbp\RateChart\CurrencyRateChart.class
+pl\parser\nbp\ChartFile\ChartFileBucket.class
+pl\parser\nbp\Application.class
+pl\parser\nbp\ChartFile\ChartFile.class
+pl\parser\nbp\Currency\Currency.class
+pl\parser\nbp\RateChart\CurrencyRateChartController.class
+pl\parser\nbp\Util\Utils.class
+pl\parser\nbp\Currency\CurrencyDeserializer.class

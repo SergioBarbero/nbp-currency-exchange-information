@@ -46,8 +46,10 @@ public class ChartFileBucket {
         return files;
     }
 
-    public NavigableSet<ChartFile> filterByType(char type) {
-        return this.files.stream().filter(e -> e.getType() == type).collect(Collectors.toCollection(TreeSet::new));
+    public SortedSet<ChartFile> filterList(char type, Date dateStart, Date dateEnd) {
+        ChartFile fileStart = this.findFile(dateStart, type);
+        ChartFile fileEnd = this.findFile(dateEnd, type);
+        return this.getFiles().stream().filter(file -> file.getType() == type).collect(Collectors.toCollection(TreeSet::new)).subSet(fileStart, fileEnd);
     }
 
     public ChartFileBucket(int year1, int year2) {
