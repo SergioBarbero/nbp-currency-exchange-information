@@ -9,61 +9,74 @@ import java.util.List;
 
 public class CurrencyRateChart {
 
-    @JsonProperty("typ")
     private char type;
 
-    @JsonProperty("uid")
     private String uid;
 
-    @JsonProperty("numer_tabeli")
     private String chartNumber;
 
-    @JsonProperty("data_notowania")
     private Date listingDate;
 
-    @JsonProperty("data_publikacji")
     private Date publicationDate;
 
-    @JsonProperty("pozycja")
-    @JacksonXmlElementWrapper(useWrapping = false)
     private List<Currency> currencies;
 
+    @JsonProperty("type")
     public char getType() {
         return type;
     }
 
+    @JsonProperty("typ")
     public void setType(char type) {
         this.type = type;
     }
 
+    @JsonProperty("uid")
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    @JsonProperty("chart_number")
     public String getChartNumber() {
         return chartNumber;
     }
 
+    @JsonProperty("numer_tabeli")
     public void setChartNumber(String chartNumber) {
         this.chartNumber = chartNumber;
     }
 
+    @JsonProperty("listing_date")
     public Date getListingDate() {
         return listingDate;
     }
 
+    @JsonProperty("data_notowania")
     public void setListingDate(Date listingDate) {
         this.listingDate = listingDate;
     }
 
+    @JsonProperty("publication_date")
     public Date getPublicationDate() {
         return publicationDate;
     }
 
+    @JsonProperty("data_publikacji")
     public void setPublicationDate(Date publicationDate) {
         this.publicationDate = publicationDate;
     }
 
+    @JsonProperty("currencies")
     public List<Currency> getCurrencies() {
         return currencies;
     }
 
+    @JsonProperty("pozycja")
+    @JacksonXmlElementWrapper(useWrapping = false)
     public void setCurrencies(List<Currency> currencies) {
         this.currencies = currencies;
     }
