@@ -28,7 +28,7 @@ public class CurrencyRateChartController {
         return file.getChart();
     }
 
-    @GetMapping("/currency-charts/{start-date}/{end-date}/{type}")
+    @GetMapping("/currency-chart/{start-date}/{end-date}/{type}")
     public List<CurrencyRateChart> getCurrencyRateCharts(@PathVariable("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate, @PathVariable("type") char type) {
         int startYear = Integer.parseInt(publicationDateFormat.format(startDate));
         int endYear = Integer.parseInt(publicationDateFormat.format(endDate));
