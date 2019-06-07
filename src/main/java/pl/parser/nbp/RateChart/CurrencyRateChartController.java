@@ -25,8 +25,7 @@ public class CurrencyRateChartController {
         ChartFileBucket bucket = new ChartFileBucket(year, year);
         ChartFile file = bucket.findFile(date, type);
         file.load();
-        CurrencyRateChart chart = file.getChart();
-        return chart;
+        return file.getChart();
     }
 
     @GetMapping("/currency-charts/{start-date}/{end-date}/{type}")
