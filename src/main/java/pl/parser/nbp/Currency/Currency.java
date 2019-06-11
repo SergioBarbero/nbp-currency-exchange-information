@@ -1,5 +1,6 @@
 package pl.parser.nbp.Currency;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize(using = CurrencyDeserializer.class)
@@ -13,6 +14,7 @@ public class Currency {
 
     private float buyingRate;
 
+    @JsonProperty("currency_name")
     public String getCurrencyName() {
         return currencyName;
     }
@@ -21,6 +23,7 @@ public class Currency {
         this.currencyName = currencyName;
     }
 
+    @JsonProperty("base")
     public int getBase() {
         return base;
     }
@@ -29,6 +32,7 @@ public class Currency {
         this.base = base;
     }
 
+    @JsonProperty("curency_code")
     public CurrencyCode getCurrencyCode() {
         return currencyCode;
     }
@@ -37,6 +41,7 @@ public class Currency {
         this.currencyCode = currencyCode;
     }
 
+    @JsonProperty("buying_rate")
     public float getBuyingRate() {
         return buyingRate;
     }
@@ -45,6 +50,7 @@ public class Currency {
         this.buyingRate = buyingRate;
     }
 
+    @JsonProperty("selling_rate")
     public float getSellingRate() {
         return sellingRate;
     }
