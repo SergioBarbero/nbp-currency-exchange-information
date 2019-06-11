@@ -21,17 +21,12 @@ public class CurrencyDeserializer extends StdDeserializer<Currency> {
     @Override
     public Currency deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         JsonNode node = p.getCodec().readTree(p);
-        String currencyName;
-        int base;
-        String currencyCode;
-        float buyingRate;
-        float sellingRate;
 
-        currencyName = node.get("nazwa_waluty").asText();
-        base = Integer.parseInt(node.get("przelicznik").asText());
-        currencyCode = node.get("kod_waluty").asText();
-        buyingRate = Float.parseFloat(node.get("kurs_kupna").asText().replace("," , "."));
-        sellingRate = Float.parseFloat(node.get("kurs_sprzedazy").asText().replace("," , "."));
+        String currencyName = node.get("nazwa_waluty").asText();
+        int base = Integer.parseInt(node.get("przelicznik").asText());
+        CurrencyCode currencyCode = CurrencyCode.valueOf(node.get("kod_waluty").asText());
+        float buyingRate = Float.parseFloat(node.get("kurs_kupna").asText().replace("," , "."));
+        float sellingRate = Float.parseFloat(node.get("kurs_sprzedazy").asText().replace("," , "."));
 
         return new Currency(currencyName, base, currencyCode, buyingRate, sellingRate);
     }

@@ -9,7 +9,7 @@ public class Currency {
 
     private int base;
 
-    private String currencyCode;
+    private CurrencyCode currencyCode;
 
     private float buyingRate;
 
@@ -29,11 +29,11 @@ public class Currency {
         this.base = base;
     }
 
-    public String getCurrencyCode() {
+    public CurrencyCode getCurrencyCode() {
         return currencyCode;
     }
 
-    public void setCurrencyCode(String currencyCode) {
+    public void setCurrencyCode(CurrencyCode currencyCode) {
         this.currencyCode = currencyCode;
     }
 
@@ -55,7 +55,7 @@ public class Currency {
 
     private float sellingRate;
 
-    public Currency(String currencyName, int base, String currencyCode, float buyingRate, float sellingRate) {
+    public Currency(String currencyName, int base, CurrencyCode currencyCode, float buyingRate, float sellingRate) {
         this.currencyName = currencyName;
         this.base = base;
         this.currencyCode = currencyCode;
