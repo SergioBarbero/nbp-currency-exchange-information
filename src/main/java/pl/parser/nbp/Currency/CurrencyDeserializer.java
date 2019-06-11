@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import pl.parser.nbp.Currency.Currency;
 
 public class CurrencyDeserializer extends StdDeserializer<Currency> {
     private static final long serialVersionUID = 1L;
