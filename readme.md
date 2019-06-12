@@ -1,6 +1,6 @@
 # Nbp Currency Exchange Information
 
-Tool made with the purpose of retrieve information of given by the nbp (Polish national bank) of PLN currency
+Tool made with the purpose of retrieve information of given by the nbp (Polish national bank) of PLN PurchasesRate
 
 # How does it work?
 

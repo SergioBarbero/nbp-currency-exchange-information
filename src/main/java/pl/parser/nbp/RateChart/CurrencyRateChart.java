@@ -2,7 +2,7 @@ package pl.parser.nbp.RateChart;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import pl.parser.nbp.Currency.Currency;
+import pl.parser.nbp.Rate.PurchasesRate;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +19,7 @@ public class CurrencyRateChart {
 
     private Date publicationDate;
 
-    private List<Currency> currencies;
+    private List<PurchasesRate> currencies;
 
     @JsonProperty("type")
     public char getType() {
@@ -71,17 +71,17 @@ public class CurrencyRateChart {
     }
 
     @JsonProperty("currencies")
-    public List<Currency> getCurrencies() {
+    public List<PurchasesRate> getCurrencies() {
         return currencies;
     }
 
     @JsonProperty("pozycja")
     @JacksonXmlElementWrapper(useWrapping = false)
-    public void setCurrencies(List<Currency> currencies) {
+    public void setCurrencies(List<PurchasesRate> currencies) {
         this.currencies = currencies;
     }
 
-    public Currency getRateByCurrency(String currencyCode) {
-        return this.getCurrencies().stream().filter(currency -> currency.getCurrencyCode().equals(currencyCode)).findFirst().get();
+    public PurchasesRate getRateByCurrency(String currencyCode) {
+        return this.getCurrencies().stream().filter(PurchasesRate -> PurchasesRate.getCurrencyCode().equals(currencyCode)).findFirst().get();
     }
 }

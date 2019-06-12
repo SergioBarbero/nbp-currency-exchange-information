@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import pl.parser.nbp.ChartFile.ChartFile;
 import pl.parser.nbp.ChartFile.ChartFileBucket;
-import pl.parser.nbp.Currency.Currency;
+import pl.parser.nbp.Rate.PurchasesRate;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,9 +31,9 @@ public class CurrencyStatisticsController {
         ChartFileBucket bucket = new ChartFileBucket(startYear, endYear);
         SortedSet<ChartFile> filteredList = bucket.filterList(type, startDate, endDate);
         filteredList.forEach(ChartFile::load);
-        List<Currency> rates = filteredList.stream().map(file -> file.getChart().getRateByCurrency(currencyCode)).collect(Collectors.toList());
-        double[] buyingRates = rates.stream().mapToDouble(Currency::getBuyingRate).toArray();
-        double[] sellingRates = rates.stream().mapToDouble(Currency::getSellingRate).toArray();
+        List<PurchasesRate> rates = filteredList.stream().map(file -> file.getChart().getRateByCurrency(currencyCode)).collect(Collectors.toList());
+        double[] buyingRates = rates.stream().mapToDouble(PurchasesRate::getBuyingRate).toArray();
+        double[] sellingRates = rates.stream().mapToDouble(PurchasesRate::getSellingRate).toArray();
         return new CurrencyStatistics(new RateStatistics(buyingRates), new RateStatistics(sellingRates));
     }
 
