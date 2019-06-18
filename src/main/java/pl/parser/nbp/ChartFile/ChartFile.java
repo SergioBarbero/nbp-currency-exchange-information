@@ -11,7 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ChartFile implements Comparable<ChartFile> {
+public class ChartFile implements Comparable<ChartFile>, Loadable {
 
     private final static String baseUrl = "http://www.nbp.pl/kursy/xml/";
     private static ObjectMapper xmlMapper = new XmlMapper();
@@ -43,6 +43,7 @@ public class ChartFile implements Comparable<ChartFile> {
         return this.publicationDate;
     }
 
+    @Override
     public void load() {
         try {
             String content = Utils.readFromUrl(this.getUrl());
