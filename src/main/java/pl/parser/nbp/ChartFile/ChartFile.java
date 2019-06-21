@@ -3,6 +3,7 @@ package pl.parser.nbp.ChartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import pl.parser.nbp.RateChart.CurrencyRateChart;
+import pl.parser.nbp.RateChart.CurrencyRateChartC;
 import pl.parser.nbp.Util.Utils;
 
 import java.io.IOException;
@@ -17,7 +18,6 @@ public class ChartFile implements Comparable<ChartFile>, Loadable {
     private static ObjectMapper xmlMapper = new XmlMapper();
     private static DateFormat publicationDateFormat = new SimpleDateFormat("yyMMdd");
 
-    private static char commonLetter = 'z';
     private String tableReference;
     private Date publicationDate;
     private char type;
@@ -32,6 +32,7 @@ public class ChartFile implements Comparable<ChartFile>, Loadable {
     }
 
     public String getFileName() {
+        char commonLetter = 'z';
         return this.type + this.tableReference + commonLetter + publicationDateFormat.format(this.publicationDate);
     }
 
@@ -44,12 +45,12 @@ public class ChartFile implements Comparable<ChartFile>, Loadable {
     }
 
     @Override
-    public void load() {
-        try {
-            String content = Utils.readFromUrl(this.getUrl());
-            this.chart = xmlMapper.readValue(content, CurrencyRateChart.class);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void load() throws IOException {
+        String content = Utils.readFromUrl(this.getUrl());
+        if (this.type == 'c') {
+            this.chart = xmlMapper.readValue(content, CurrencyRateChartC.class);
+        } else {
+            throw new IllegalArgumentException("This kind of chart is not allowed");
         }
     }
 

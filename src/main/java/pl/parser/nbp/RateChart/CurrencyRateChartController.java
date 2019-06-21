@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.parser.nbp.ChartFile.ChartFile;
 import pl.parser.nbp.ChartFile.ChartFileBucket;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
@@ -24,17 +24,30 @@ public class CurrencyRateChartController {
         int year = Integer.parseInt(publicationDateFormat.format(date));
         ChartFileBucket bucket = new ChartFileBucket(year, year);
         ChartFile file = bucket.findFile(date, type);
-        file.load();
+        try {
+            file.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return file.getChart();
     }
 
     @GetMapping("/currency-chart/{start-date}/{end-date}/{type}")
-    public List<CurrencyRateChart> getCurrencyRateCharts(@PathVariable("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate, @PathVariable("type") char type) {
+    public List<CurrencyRateChart> getCurrencyRateCharts(
+            @PathVariable("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+            @PathVariable("type") char type) {
         int startYear = Integer.parseInt(publicationDateFormat.format(startDate));
         int endYear = Integer.parseInt(publicationDateFormat.format(endDate));
         ChartFileBucket bucket = new ChartFileBucket(startYear, endYear);
         SortedSet<ChartFile> files = bucket.filterList(type, startDate, endDate);
-        files.forEach(ChartFile::load);
-        return files.stream().filter(file -> file.getType() == 'c').map(ChartFile::getChart).collect(Collectors.toList());
+        for (ChartFile chartFile : files) {
+            try {
+                chartFile.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return files.stream().filter(file -> file.getType() == type).map(ChartFile::getChart).collect(Collectors.toList());
     }
 }

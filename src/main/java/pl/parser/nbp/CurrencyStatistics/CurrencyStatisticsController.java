@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.parser.nbp.ChartFile.ChartFile;
 import pl.parser.nbp.ChartFile.ChartFileBucket;
 import pl.parser.nbp.Rate.PurchasesRate;
+import pl.parser.nbp.RateChart.CurrencyRateChartC;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,22 +22,27 @@ public class CurrencyStatisticsController {
 
     private static DateFormat publicationDateFormat = new SimpleDateFormat("yyyy");
 
-    @GetMapping("/statistics/{start-date}/{end-date}/{currency}/{type}")
+    @GetMapping("/statistics/{start-date}/{end-date}/{currency}")
     public CurrencyStatistics getStatisticsForRangeAndType(
             @PathVariable("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
-            @PathVariable("currency") String currencyCode,
-            @PathVariable("type") char type) {
+            @PathVariable("currency") String currencyCode) {
+
         int startYear = Integer.parseInt(publicationDateFormat.format(startDate));
         int endYear = Integer.parseInt(publicationDateFormat.format(endDate));
         ChartFileBucket bucket = new ChartFileBucket(startYear, endYear);
-        SortedSet<ChartFile> filteredList = bucket.filterList(type, startDate, endDate);
-        filteredList.forEach(ChartFile::load);
-        List<PurchasesRate> rates = filteredList.stream().map(file -> file.getChart().getRateByCurrency(currencyCode)).collect(Collectors.toList());
+        SortedSet<ChartFile> filteredList = bucket.filterList('c', startDate, endDate);
+        for (ChartFile chartFile : filteredList) {
+            try {
+                chartFile.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        List<PurchasesRate> rates = filteredList.stream().map(file -> file.getChart()).map(CurrencyRateChartC.class::cast).map(chart -> chart.getRateByCurrency(currencyCode)).collect(Collectors.toList());
         double[] buyingRates = rates.stream().mapToDouble(PurchasesRate::getBuyingRate).toArray();
         double[] sellingRates = rates.stream().mapToDouble(PurchasesRate::getSellingRate).toArray();
         return new CurrencyStatistics(new RateStatistics(buyingRates), new RateStatistics(sellingRates));
     }
-
 
 }
