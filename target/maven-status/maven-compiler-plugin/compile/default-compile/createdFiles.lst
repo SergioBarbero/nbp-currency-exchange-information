@@ -7,10 +7,10 @@ pl/parser/nbp/CurrencyStatistics/CurrencyStatisticsController.class
 pl/parser/nbp/ChartFile/ChartFile.class
 pl/parser/nbp/CurrencyStatistics/RateStatistics.class
 pl/parser/nbp/RateChart/CurrencyRateChartC.class
-pl/parser/nbp/ChartFile/ChartFileBucket.class
 pl/parser/nbp/Rate/PurchasesRate.class
 pl/parser/nbp/RateChart/CurrencyRateChartController.class
 pl/parser/nbp/ChartFile/Loadable.class
 pl/parser/nbp/Util/Utils.class
+pl/parser/nbp/ChartFile/ChartFileWrapper.class
 pl/parser/nbp/Rate/PurchasesRateDeserializer.class
 pl/parser/nbp/Rate/Rate.class

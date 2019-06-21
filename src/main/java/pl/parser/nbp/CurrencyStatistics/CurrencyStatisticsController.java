@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import pl.parser.nbp.ChartFile.ChartFile;
-import pl.parser.nbp.ChartFile.ChartFileBucket;
+import pl.parser.nbp.ChartFile.ChartFileWrapper;
 import pl.parser.nbp.Rate.PurchasesRate;
 import pl.parser.nbp.RateChart.CurrencyRateChartC;
 
@@ -30,7 +30,7 @@ public class CurrencyStatisticsController {
 
         int startYear = Integer.parseInt(publicationDateFormat.format(startDate));
         int endYear = Integer.parseInt(publicationDateFormat.format(endDate));
-        ChartFileBucket bucket = new ChartFileBucket(startYear, endYear);
+        ChartFileWrapper bucket = new ChartFileWrapper(startYear, endYear);
         SortedSet<ChartFile> filteredList = bucket.filterList('c', startDate, endDate);
         for (ChartFile chartFile : filteredList) {
             try {
@@ -39,7 +39,7 @@ public class CurrencyStatisticsController {
                 e.printStackTrace();
             }
         }
-        List<PurchasesRate> rates = filteredList.stream().map(file -> file.getChart()).map(CurrencyRateChartC.class::cast).map(chart -> chart.getRateByCurrency(currencyCode)).collect(Collectors.toList());
+        List<PurchasesRate> rates = filteredList.stream().map(ChartFile::getChart).map(CurrencyRateChartC.class::cast).map(chart -> chart.getRateByCurrency(currencyCode)).collect(Collectors.toList());
         double[] buyingRates = rates.stream().mapToDouble(PurchasesRate::getBuyingRate).toArray();
         double[] sellingRates = rates.stream().mapToDouble(PurchasesRate::getSellingRate).toArray();
         return new CurrencyStatistics(new RateStatistics(buyingRates), new RateStatistics(sellingRates));

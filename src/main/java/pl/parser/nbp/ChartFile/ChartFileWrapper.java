@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ChartFileBucket {
+public class ChartFileWrapper {
 
     private final static int limitYear = 2002;
     private final static String rateChartListBaseUrl = "http://www.nbp.pl/kursy/xml/";
@@ -51,7 +51,7 @@ public class ChartFileBucket {
         return this.getFiles().stream().filter(file -> file.getType() == type).collect(Collectors.toCollection(TreeSet::new)).subSet(fileStart, true, fileEnd, true);
     }
 
-    public ChartFileBucket(int year1, int year2) {
+    public ChartFileWrapper(int year1, int year2) {
         if (year1 < limitYear || year2 < limitYear) {
             throw new IllegalArgumentException();
         }

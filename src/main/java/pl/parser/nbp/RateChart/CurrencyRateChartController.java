@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import pl.parser.nbp.ChartFile.ChartFile;
-import pl.parser.nbp.ChartFile.ChartFileBucket;
+import pl.parser.nbp.ChartFile.ChartFileWrapper;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -22,7 +22,7 @@ public class CurrencyRateChartController {
     @GetMapping("/currency-chart/{date}/{type}")
     public CurrencyRateChart getCurrencyRateChart(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date, @PathVariable("type") char type) {
         int year = Integer.parseInt(publicationDateFormat.format(date));
-        ChartFileBucket bucket = new ChartFileBucket(year, year);
+        ChartFileWrapper bucket = new ChartFileWrapper(year, year);
         ChartFile file = bucket.findFile(date, type);
         try {
             file.load();
@@ -39,7 +39,7 @@ public class CurrencyRateChartController {
             @PathVariable("type") char type) {
         int startYear = Integer.parseInt(publicationDateFormat.format(startDate));
         int endYear = Integer.parseInt(publicationDateFormat.format(endDate));
-        ChartFileBucket bucket = new ChartFileBucket(startYear, endYear);
+        ChartFileWrapper bucket = new ChartFileWrapper(startYear, endYear);
         SortedSet<ChartFile> files = bucket.filterList(type, startDate, endDate);
         for (ChartFile chartFile : files) {
             try {
