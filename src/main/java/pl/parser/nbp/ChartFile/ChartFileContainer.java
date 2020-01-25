@@ -1,5 +1,5 @@
 package pl.parser.nbp.ChartFile;
-import pl.parser.nbp.Util.Utils;
+import pl.parser.nbp.Util.FileUtil;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ChartFileWrapper {
+public class ChartFileContainer {
 
     private final static int limitYear = 2002;
     private final static String rateChartListBaseUrl = "http://www.nbp.pl/kursy/xml/";
@@ -37,7 +37,7 @@ public class ChartFileWrapper {
 
     private static NavigableSet<String> retrieveList(int year) throws IOException {
         String url = buildUrl(year);
-        String[] content = Utils.readFromUrl(url).split("\r\n");
+        String[] content = FileUtil.readContentFromUrl(url).split("\r\n");
         return new TreeSet<>(Arrays.asList(content));
     }
 
@@ -51,7 +51,7 @@ public class ChartFileWrapper {
         return this.getFiles().stream().filter(file -> file.getType() == type).collect(Collectors.toCollection(TreeSet::new)).subSet(fileStart, true, fileEnd, true);
     }
 
-    public ChartFileWrapper(int year1, int year2) {
+    public ChartFileContainer(int year1, int year2) {
         if (year1 < limitYear || year2 < limitYear) {
             throw new IllegalArgumentException();
         }

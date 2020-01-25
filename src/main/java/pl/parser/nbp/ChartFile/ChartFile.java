@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import pl.parser.nbp.RateChart.CurrencyRateChart;
 import pl.parser.nbp.RateChart.CurrencyRateChartC;
-import pl.parser.nbp.Util.Utils;
+import pl.parser.nbp.Util.FileUtil;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -15,12 +15,13 @@ import java.util.Date;
 public class ChartFile implements Comparable<ChartFile>, Loadable {
 
     private final static String baseUrl = "http://www.nbp.pl/kursy/xml/";
-    private static ObjectMapper xmlMapper = new XmlMapper();
-    private static DateFormat publicationDateFormat = new SimpleDateFormat("yyMMdd");
+    private final static ObjectMapper xmlMapper = new XmlMapper();
+    private final static DateFormat publicationDateFormat = new SimpleDateFormat("yyMMdd");
+    private final static char commonLetter = 'z';
 
-    private String tableReference;
-    private Date publicationDate;
-    private char type;
+    private final String tableReference;
+    private final Date publicationDate;
+    private final char type;
 
     private CurrencyRateChart chart;
 
@@ -32,7 +33,6 @@ public class ChartFile implements Comparable<ChartFile>, Loadable {
     }
 
     public String getFileName() {
-        char commonLetter = 'z';
         return this.type + this.tableReference + commonLetter + publicationDateFormat.format(this.publicationDate);
     }
 
@@ -46,7 +46,7 @@ public class ChartFile implements Comparable<ChartFile>, Loadable {
 
     @Override
     public void load() throws IOException {
-        String content = Utils.readFromUrl(this.getUrl());
+        String content = FileUtil.readContentFromUrl(this.getUrl());
         if (this.type == 'c') {
             this.chart = xmlMapper.readValue(content, CurrencyRateChartC.class);
         } else {

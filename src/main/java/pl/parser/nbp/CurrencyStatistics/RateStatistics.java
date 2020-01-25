@@ -1,6 +1,6 @@
 package pl.parser.nbp.CurrencyStatistics;
 
-import pl.parser.nbp.Util.MathStatistics;
+import pl.parser.nbp.Util.MathStatisticsUtil;
 
 public class RateStatistics {
 
@@ -9,8 +9,8 @@ public class RateStatistics {
     private double standardDeviation;
 
     public RateStatistics(double[] rates) {
-        this.mean = MathStatistics.avg(rates);
-        this.standardDeviation = MathStatistics.stdDeviation(rates);
+        this.mean = MathStatisticsUtil.avg(rates);
+        this.standardDeviation = MathStatisticsUtil.stdDeviation(rates);
     }
 
     public double getMean() {

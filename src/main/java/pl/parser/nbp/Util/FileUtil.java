@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public final class Utils {
+public final class FileUtil {
 
-    private Utils() {
+    private FileUtil() {
         throw new AssertionError();
     }
 
-    public static String readFromUrl(String url) throws IOException {
+    public static String readContentFromUrl(String url) throws IOException {
         URL fileUrl = new URL(url);
         InputStream in = fileUrl.openStream();
         return new String(in.readAllBytes());
