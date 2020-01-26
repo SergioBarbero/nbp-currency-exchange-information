@@ -2,9 +2,8 @@ package pl.parser.nbp.CurrencyStatistics;
 
 public class CurrencyStatistics {
 
-    RateStatistics sellingRate;
-
-    RateStatistics buyingRate;
+    private final RateStatistics sellingRate;
+    private final RateStatistics buyingRate;
 
     public CurrencyStatistics(RateStatistics sellingRate, RateStatistics buyingRate) {
         this.sellingRate = sellingRate;
@@ -15,15 +14,7 @@ public class CurrencyStatistics {
         return sellingRate;
     }
 
-    public void setSellingRate(RateStatistics sellingRate) {
-        this.sellingRate = sellingRate;
-    }
-
     public RateStatistics getBuyingRate() {
         return buyingRate;
-    }
-
-    public void setBuyingRate(RateStatistics buyingRate) {
-        this.buyingRate = buyingRate;
     }
 }

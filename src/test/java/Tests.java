@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test;
 import pl.parser.nbp.ChartFile.ChartFile;
-import pl.parser.nbp.ChartFile.ChartFileContainer;
+import pl.parser.nbp.ChartFile.ChartFileDirectory;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class Tests {
 
-    private ChartFileContainer list = new ChartFileContainer(2019, 2019);
+    private ChartFileDirectory list = new ChartFileDirectory(2019, 2019);
 
     @Test
     void findFileTest() {
@@ -20,7 +20,7 @@ class Tests {
     @Test
     void buildUrlTest() {
         String expectedUrl = "http://www.nbp.pl/kursy/xml/dir.txt";
-        String gotUrl = ChartFileContainer.buildUrl(2019);
+        String gotUrl = ChartFileDirectory.buildUrl(2019);
         assertEquals(expectedUrl, gotUrl);
     }
 }

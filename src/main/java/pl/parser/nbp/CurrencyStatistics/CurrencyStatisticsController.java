@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import pl.parser.nbp.ChartFile.ChartFile;
-import pl.parser.nbp.ChartFile.ChartFileContainer;
+import pl.parser.nbp.ChartFile.ChartFileDirectory;
+import pl.parser.nbp.ChartFile.ChartType;
 import pl.parser.nbp.Rate.PurchasesRate;
 import pl.parser.nbp.RateChart.CurrencyRateChartC;
 
@@ -30,16 +31,13 @@ public class CurrencyStatisticsController {
 
         int startYear = Integer.parseInt(publicationDateFormat.format(startDate));
         int endYear = Integer.parseInt(publicationDateFormat.format(endDate));
-        ChartFileContainer bucket = new ChartFileContainer(startYear, endYear);
-        SortedSet<ChartFile> filteredList = bucket.filterList('c', startDate, endDate);
-        for (ChartFile chartFile : filteredList) {
-            try {
-                chartFile.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        List<PurchasesRate> rates = filteredList.stream().map(ChartFile::getChart).map(CurrencyRateChartC.class::cast).map(chart -> chart.getRateByCurrency(currencyCode)).collect(Collectors.toList());
+        ChartFileDirectory directory = new ChartFileDirectory(startYear, endYear);
+        SortedSet<ChartFile> filteredList = directory.filterList(ChartType.c, startDate, endDate);
+        List<PurchasesRate> rates = filteredList.stream()
+                .map(ChartFile::retrieveCurrencyRateChart)
+                .map(CurrencyRateChartC.class::cast)
+                .map(chart -> chart.getRateByCurrency(currencyCode))
+                .collect(Collectors.toList());
         double[] buyingRates = rates.stream().mapToDouble(PurchasesRate::getBuyingRate).toArray();
         double[] sellingRates = rates.stream().mapToDouble(PurchasesRate::getSellingRate).toArray();
         return new CurrencyStatistics(new RateStatistics(buyingRates), new RateStatistics(sellingRates));

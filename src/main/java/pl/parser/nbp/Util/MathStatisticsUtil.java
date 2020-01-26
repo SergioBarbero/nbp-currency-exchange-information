@@ -3,7 +3,7 @@ package pl.parser.nbp.Util;
 import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
-public class MathStatisticsUtil {
+public final class MathStatisticsUtil {
 
     private MathStatisticsUtil() {
         throw new AssertionError();
