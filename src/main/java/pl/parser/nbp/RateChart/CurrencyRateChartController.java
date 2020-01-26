@@ -5,10 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import pl.parser.nbp.ChartFile.ChartFile;
-import pl.parser.nbp.ChartFile.ChartFileDirectory;
+import pl.parser.nbp.ChartFile.ChartFileService;
 import pl.parser.nbp.ChartFile.ChartType;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,8 +23,8 @@ public class CurrencyRateChartController {
             @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
             @PathVariable("type") char type) {
         int year = Integer.parseInt(publicationDateFormat.format(date));
-        ChartFileDirectory directory = new ChartFileDirectory(year, year);
-        return directory.findFile(date, ChartType.valueOf(String.valueOf(type))).retrieveCurrencyRateChart();
+        ChartFileService directory = new ChartFileService(year, year);
+        return directory.findFileBy(date, ChartType.valueOf(String.valueOf(type))).retrieveCurrencyRateChart();
     }
 
     @GetMapping("/currency-chart/{start-date}/{end-date}/{type}")
@@ -35,7 +34,7 @@ public class CurrencyRateChartController {
             @PathVariable("type") char type) {
         int startYear = Integer.parseInt(publicationDateFormat.format(startDate));
         int endYear = Integer.parseInt(publicationDateFormat.format(endDate));
-        ChartFileDirectory directory = new ChartFileDirectory(startYear, endYear);
+        ChartFileService directory = new ChartFileService(startYear, endYear);
         return directory.filterList(ChartType.valueOf(String.valueOf(type)), startDate, endDate).stream()
                 .filter(file -> ChartType.c.equals(file.getType()))
                 .map(ChartFile::retrieveCurrencyRateChart)

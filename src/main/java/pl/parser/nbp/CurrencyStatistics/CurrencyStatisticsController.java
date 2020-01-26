@@ -5,12 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import pl.parser.nbp.ChartFile.ChartFile;
-import pl.parser.nbp.ChartFile.ChartFileDirectory;
+import pl.parser.nbp.ChartFile.ChartFileService;
 import pl.parser.nbp.ChartFile.ChartType;
 import pl.parser.nbp.Rate.PurchasesRate;
 import pl.parser.nbp.RateChart.CurrencyRateChartC;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,7 +30,7 @@ public class CurrencyStatisticsController {
 
         int startYear = Integer.parseInt(publicationDateFormat.format(startDate));
         int endYear = Integer.parseInt(publicationDateFormat.format(endDate));
-        ChartFileDirectory directory = new ChartFileDirectory(startYear, endYear);
+        ChartFileService directory = new ChartFileService(startYear, endYear);
         SortedSet<ChartFile> filteredList = directory.filterList(ChartType.c, startDate, endDate);
         List<PurchasesRate> rates = filteredList.stream()
                 .map(ChartFile::retrieveCurrencyRateChart)
