@@ -59,7 +59,7 @@ public final class ChartFileService {
         int toYear = gregorianCalendarEnd.get(Calendar.YEAR);
 
         Assert.isTrue(fromYear >= LIMIT_YEAR && toYear >= LIMIT_YEAR, "Dates must be equal or after of " + LIMIT_YEAR);
-        Assert.isTrue(from.before(to), "First date introduced must be before the second");
+        Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
 
         // TODO This implementation is highly inefficient because of fetching all files 3 times
         ChartFile fileStart = this.findFileBy(from, type);
@@ -84,7 +84,7 @@ public final class ChartFileService {
         int toYear = gregorianCalendarEnd.get(Calendar.YEAR);
 
         Assert.isTrue(fromYear >= LIMIT_YEAR && toYear >= LIMIT_YEAR, "Dates must be equal or after of " + LIMIT_YEAR);
-        Assert.isTrue(from.before(to), "First date introduced must be before the second");
+        Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
 
         TreeSet<ChartFile> chartFiles = new TreeSet<>();
         for (int i = fromYear; i <= toYear; i++) {

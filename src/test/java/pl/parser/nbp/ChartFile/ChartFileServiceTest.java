@@ -49,7 +49,9 @@ class ChartFileServiceTest {
 
     @Test
     void shouldInstantiateChartFileDirectory() {
-        assertThat(chartFileService.getAllFiles(2002, 2007), notNullValue());
+        Date from = new Date(1105311600000L);
+
+        assertThat(chartFileService.getAllFiles(from, from), notNullValue());
     }
 
     @Test
