@@ -1,6 +1,5 @@
 package pl.parser.nbp.RateChart;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +18,11 @@ import java.util.stream.Collectors;
 public class CurrencyRateChartController {
     private final static DateFormat PUBLICATION_DATE_FORMAT = new SimpleDateFormat("yyyy");
 
-    @Autowired
-    private ChartFileService chartFileService;
+    private final ChartFileService chartFileService;
+
+    public CurrencyRateChartController(ChartFileService chartFileService) {
+        this.chartFileService = chartFileService;
+    }
 
     @GetMapping("/currency-chart/{date}/{type}")
     public CurrencyRateChart getCurrencyRateChart(

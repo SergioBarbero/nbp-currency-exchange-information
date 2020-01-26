@@ -24,10 +24,10 @@ public final class ChartFile implements Comparable<ChartFile> {
     private final Date publicationDate;
     private final ChartType type;
 
-    public ChartFile(String fileName) throws ParseException {
+    public ChartFile(String fileName) throws IllegalArgumentException, ParseException {
         String formattedDate = fileName.substring(fileName.length() - 6);
         this.publicationDate = PUBLICATION_DATE_FORMAT.parse(formattedDate);
-        this.type = ChartType.valueOf(String.valueOf(fileName.charAt(0)));
+        this.type = ChartType.valueOf(fileName.substring(0, 1));
         this.tableReference = fileName.substring(1, 4);
     }
 
@@ -44,7 +44,7 @@ public final class ChartFile implements Comparable<ChartFile> {
     }
 
     public CurrencyRateChart retrieveCurrencyRateChart() {
-        Assert.state(this.type.equals(ChartType.c), "This kind of chart is not allowed");
+        Assert.isTrue(this.type.equals(ChartType.c), "This kind of chart is not allowed");
         CurrencyRateChartC currencyRateChartC;
         try {
             String urlContent = FileUtil.readContentFromUrl(this.getUrl());
