@@ -1,4 +1,5 @@
 package pl.parser.nbp.ChartFile;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import pl.parser.nbp.Util.FileUtil;
 
@@ -7,26 +8,16 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.NavigableSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public final class ChartFileService {
 
     private final static int LIMIT_YEAR = 2002;
     private final static String RATE_CHART_LIST_BASE_URL = "http://www.nbp.pl/kursy/xml/";
 
-    private final int fromYear;
-    private final int toYear;
-
-    public ChartFileService(int year1, int year2) {
-        Assert.state(year1 <= LIMIT_YEAR || year2 <= LIMIT_YEAR, "Year must be higer than " + LIMIT_YEAR);
-        this.fromYear = Math.min(year1, year2);
-        this.toYear = Math.max(year1, year2);
-    }
+    public ChartFileService() {}
 
     /**
      * Gets the closer fileName given the date parameter, this means, if exact file was not provided in specified date, the previous to it
@@ -35,8 +26,13 @@ public final class ChartFileService {
      * @return name of the file
      */
     public ChartFile findFileBy(Date date, ChartType type) {
+        Calendar gregorianCalendar = new GregorianCalendar();
+        gregorianCalendar.setTime(date);
+        int year = gregorianCalendar.get(Calendar.YEAR);
+        Assert.isTrue(year >= LIMIT_YEAR, "Year must be higher than " + LIMIT_YEAR);
+
         DateFormat df = new SimpleDateFormat("yyMMdd");
-        NavigableSet<ChartFile> allFiles = this.getAllFiles();
+        NavigableSet<ChartFile> allFiles = this.getAllFiles(year, year);
         TreeSet<Date> dates = allFiles.stream()
                 .filter(e -> e.getType().equals(type))
                 .map(ChartFile::getPublicationDate)
@@ -46,7 +42,38 @@ public final class ChartFileService {
         return allFiles.stream().filter(e -> e.getFileName().matches(regex)).findFirst().get();
     }
 
-    public NavigableSet<ChartFile> getAllFiles() {
+    /**
+     * Retrieves a NavigableSet of ChartFile given a type and two boundary dates
+     * @param type
+     * @param dateStart
+     * @param dateEnd
+     * @return All ChartFiles found
+     */
+    public NavigableSet<ChartFile> findFilesBy(ChartType type, Date dateStart, Date dateEnd) {
+        Calendar gregorianCalendarStart = new GregorianCalendar();
+        gregorianCalendarStart.setTime(dateStart);
+        int fromYear = gregorianCalendarStart.get(Calendar.YEAR);
+
+        Calendar gregorianCalendarEnd = new GregorianCalendar();
+        gregorianCalendarEnd.setTime(dateEnd);
+        int toYear = gregorianCalendarEnd.get(Calendar.YEAR);
+
+        Assert.isTrue(fromYear >= LIMIT_YEAR && toYear >= LIMIT_YEAR, "Dates must be higher than " + LIMIT_YEAR);
+
+        // TODO This implementation is highly inefficient because of fetching all files 3 times
+        ChartFile fileStart = this.findFileBy(dateStart, type);
+        ChartFile fileEnd = this.findFileBy(dateEnd, type);
+        return this.getAllFiles(fromYear, toYear).stream()
+                .filter(file -> file.getType().equals(type))
+                .collect(Collectors.toCollection(TreeSet::new))
+                .subSet(fileStart, true, fileEnd, true);
+    }
+
+    /**
+     * Retrieves all files into NavigableSet
+     * @return All ChartFiles found
+     */
+    public NavigableSet<ChartFile> getAllFiles(int fromYear, int toYear) {
         TreeSet<ChartFile> chartFiles = new TreeSet<>();
         for (int i = fromYear; i <= toYear; i++) {
             try {
@@ -61,19 +88,13 @@ public final class ChartFileService {
         return chartFiles;
     }
 
-    public NavigableSet<ChartFile> filterList(ChartType type, Date dateStart, Date dateEnd) {
-        ChartFile fileStart = this.findFileBy(dateStart, type);
-        ChartFile fileEnd = this.findFileBy(dateEnd, type);
-        return this.getAllFiles().stream().filter(file -> file.getType().equals(type)).collect(Collectors.toCollection(TreeSet::new)).subSet(fileStart, true, fileEnd, true);
-    }
-
     private static NavigableSet<String> retrieveList(int year) throws IOException {
-        String url = buildUrl(year);
+        String url = getUrl(year);
         String[] content = FileUtil.readContentFromUrl(url).split("\r\n");
         return new TreeSet<>(Arrays.asList(content));
     }
 
-    private static String buildUrl(int year) {
+    private static String getUrl(int year) {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         return (year == currentYear) ? RATE_CHART_LIST_BASE_URL + "dir.txt" : RATE_CHART_LIST_BASE_URL + "dir" + year + ".txt";
     }

@@ -1,5 +1,6 @@
 package pl.parser.nbp.CurrencyStatistics;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,8 @@ import java.util.stream.Collectors;
 @RestController
 public class CurrencyStatisticsController {
 
-    private static DateFormat publicationDateFormat = new SimpleDateFormat("yyyy");
+    @Autowired
+    private ChartFileService chartFileService;
 
     @GetMapping("/statistics/{start-date}/{end-date}/{currency}")
     public CurrencyStatistics getStatisticsForRangeAndType(
@@ -28,10 +30,7 @@ public class CurrencyStatisticsController {
             @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @PathVariable("currency") String currencyCode) {
 
-        int startYear = Integer.parseInt(publicationDateFormat.format(startDate));
-        int endYear = Integer.parseInt(publicationDateFormat.format(endDate));
-        ChartFileService directory = new ChartFileService(startYear, endYear);
-        SortedSet<ChartFile> filteredList = directory.filterList(ChartType.c, startDate, endDate);
+        SortedSet<ChartFile> filteredList = chartFileService.findFilesBy(ChartType.c, startDate, endDate);
         List<PurchasesRate> rates = filteredList.stream()
                 .map(ChartFile::retrieveCurrencyRateChart)
                 .map(CurrencyRateChartC.class::cast)
