@@ -45,13 +45,12 @@ public final class ChartFile implements Comparable<ChartFile> {
 
     public CurrencyRateChart retrieveCurrencyRateChart() {
         Assert.state(this.type.equals(ChartType.c), "This kind of chart is not allowed");
-        String url = this.getUrl();
         CurrencyRateChartC currencyRateChartC;
         try {
-            String urlContent = FileUtil.readContentFromUrl(url);
+            String urlContent = FileUtil.readContentFromUrl(this.getUrl());
             currencyRateChartC = XML_MAPPER.readValue(urlContent, CurrencyRateChartC.class);
         } catch (IOException e) {
-            throw new ChartNotLoadedException("Chart file " + url + " couldn't be loaded");
+            throw new ChartNotLoadedException("Chart file " + this.getFileName() + " couldn't be loaded");
         }
         return currencyRateChartC;
     }

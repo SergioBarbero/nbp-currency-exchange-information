@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 import pl.parser.nbp.ChartFile.ChartFile;
 import pl.parser.nbp.ChartFile.ChartFileDirectory;
+import pl.parser.nbp.ChartFile.ChartType;
 
 import java.util.Date;
 
@@ -13,7 +14,7 @@ class Tests {
     @Test
     void findFileTest() {
         long time = 1546473600000L;
-        ChartFile filename = list.findFile(new Date(time), 'c');
+        ChartFile filename = list.findFile(new Date(time), ChartType.c);
         assertEquals("c002z190103", filename.getFileName());
     }
 
