@@ -13,10 +13,10 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @SpringBootTest
-class ChartFileServiceTest {
+class ChartFileRemoteServiceTest {
 
     @Autowired
-    private ChartFileService chartFileService;
+    private ChartFileService ChartFileService;
 
     @Test
     void shouldThrowIllegalArgumentException_OnFindFilesBy_WhenPassedIncorrectDates() {
@@ -24,7 +24,7 @@ class ChartFileServiceTest {
         Date from = new Date(947458800000L);
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> chartFileService.findFilesBy(ChartType.c, from, to))
+                .isThrownBy(() -> ChartFileService.findFilesBy(ChartType.c, from, to))
                 .withMessage("Dates must be equal or after of 2002");
     }
 
@@ -34,7 +34,7 @@ class ChartFileServiceTest {
         Date from = new Date(1042153200000L);
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> chartFileService.findFilesBy(ChartType.c, from, to))
+                .isThrownBy(() -> ChartFileService.findFilesBy(ChartType.c, from, to))
                 .withMessage("First date introduced must be before the second");
     }
 
@@ -43,7 +43,7 @@ class ChartFileServiceTest {
         Date from = new Date(979081200000L);
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> chartFileService.findFileBy(from, ChartType.c))
+                .isThrownBy(() -> ChartFileService.findFileBy(from, ChartType.c))
                 .withMessage("Dates must be equal or after of 2002");
     }
 
@@ -51,7 +51,7 @@ class ChartFileServiceTest {
     void shouldInstantiateChartFileDirectory() {
         Date from = new Date(1105311600000L);
 
-        assertThat(chartFileService.getAllFiles(from, from), notNullValue());
+        assertThat(ChartFileService.findFilesBy(from, from), notNullValue());
     }
 
     @Test
@@ -61,7 +61,7 @@ class ChartFileServiceTest {
         Date to = new Date(1136847600000L);
 
         // when
-        NavigableSet<ChartFile> files = chartFileService.findFilesBy(ChartType.c, from, to);
+        NavigableSet<ChartFile> files = ChartFileService.findFilesBy(ChartType.c, from, to);
 
         // then
         assertThat(files, notNullValue());
@@ -73,7 +73,7 @@ class ChartFileServiceTest {
         Date date = new Date(1105311600000L); // 26-01-2005
 
         // when
-        ChartFile file = chartFileService.findFileBy(date, ChartType.c);
+        ChartFile file = ChartFileService.findFileBy(date, ChartType.c);
 
         // then
         assertThat(file.getPublicationDate(), is(date));

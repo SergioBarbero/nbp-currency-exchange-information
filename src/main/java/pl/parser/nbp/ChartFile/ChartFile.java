@@ -24,9 +24,15 @@ public final class ChartFile implements Comparable<ChartFile> {
     private final Date publicationDate;
     private final ChartType type;
 
-    public ChartFile(String fileName) throws IllegalArgumentException, ParseException {
+    public ChartFile(String fileName) {
         String formattedDate = fileName.substring(fileName.length() - 6);
-        this.publicationDate = PUBLICATION_DATE_FORMAT.parse(formattedDate);
+        Date publicationDate = null;
+        try {
+            publicationDate = PUBLICATION_DATE_FORMAT.parse(formattedDate);
+        } catch (ParseException e) {
+            throw new DateNotParsableException("Date was not parsable");
+        }
+        this.publicationDate = publicationDate;
         this.type = ChartType.valueOf(fileName.substring(0, 1));
         this.tableReference = fileName.substring(1, 4);
     }
