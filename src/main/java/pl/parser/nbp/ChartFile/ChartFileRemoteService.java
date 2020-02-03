@@ -61,13 +61,10 @@ public final class ChartFileRemoteService implements ChartFileService {
         Assert.isTrue(fromYear >= LIMIT_YEAR && toYear >= LIMIT_YEAR, "Dates must be equal or after of " + LIMIT_YEAR);
         Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
 
-        // TODO This implementation is highly inefficient because of fetching all files 3 times
-        ChartFile fileStart = this.findFileBy(from, type);
-        ChartFile fileEnd = this.findFileBy(to, type);
         return this.findFilesBy(from, to).stream()
                 .filter(file -> file.getType().equals(type))
-                .collect(Collectors.toCollection(TreeSet::new))
-                .subSet(fileStart, true, fileEnd, true);
+                .filter(file -> file.getPublicationDate().before(to) && file.getPublicationDate().after(from))
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -89,7 +86,8 @@ public final class ChartFileRemoteService implements ChartFileService {
 
         return IntStream.rangeClosed(fromYear, toYear)
                 .mapToObj(year -> new ChartFileDirectory().findChartFiles(year))
-                .flatMap(Collection::stream).collect(Collectors.toCollection(TreeSet::new));
+                .flatMap(Collection::stream)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     private static class ChartFileDirectory {
@@ -99,7 +97,7 @@ public final class ChartFileRemoteService implements ChartFileService {
                 return Arrays.stream(FileUtil.readContentFromUrl(getUrl(year)).split("\r\n"))
                         .map(ChartFile::new).collect(Collectors.toCollection(TreeSet::new));
             } catch (IOException e) {
-                throw new FileCouldntBeLoadedException("File couldn't be retrieved", e);
+                throw new FileNotLoadedException("File couldn't be retrieved", e);
             }
         }
 
