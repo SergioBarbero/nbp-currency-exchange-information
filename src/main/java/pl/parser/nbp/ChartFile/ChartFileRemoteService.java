@@ -30,20 +30,16 @@ public final class ChartFileRemoteService implements ChartFileService {
      */
     @Override
     public ChartFile findFileBy(Date date, ChartType type) {
-        Calendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.setTime(date);
-        int year = gregorianCalendar.get(Calendar.YEAR);
-        Assert.isTrue(year >= LIMIT_YEAR, "Dates must be equal or after of " + LIMIT_YEAR);
+        Assert.isTrue(date.after(LIMIT_DATE), "Dates must be in or after " + getYearFromDate(LIMIT_DATE) + 1);
+        int year = getYearFromDate(date);
 
-        DateFormat df = new SimpleDateFormat("yyMMdd");
-        NavigableSet<ChartFile> allFiles = this.findFilesBy(date, date);
-        TreeSet<Date> dates = allFiles.stream()
+        TreeSet<Date> dates = new ChartFileDirectory().findChartFiles(year).stream()
                 .filter(e -> e.getType().equals(type))
                 .map(ChartFile::getPublicationDate)
                 .collect(Collectors.toCollection(TreeSet::new));
-        String closest = df.format(dates.floor(date));
+        String closest = new SimpleDateFormat("yyMMdd").format(dates.floor(date));
         String regex = String.format("^%s.*%s$", type, closest);
-        return allFiles.stream().filter(e -> e.getFileName().matches(regex)).findFirst().get();
+        return new ChartFileDirectory().findChartFiles(year).stream().filter(e -> e.getFileName().matches(regex)).findFirst().get();
     }
 
     /**
@@ -56,7 +52,7 @@ public final class ChartFileRemoteService implements ChartFileService {
     @Override
     public NavigableSet<ChartFile> findFilesBy(Date from, Date to, ChartType type) {
         Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
-        Assert.isTrue(from.after(LIMIT_DATE), "Dates must be after " + LIMIT_DATE);
+        Assert.isTrue(from.after(LIMIT_DATE), "Dates must be in or after " + getYearFromDate(LIMIT_DATE) + 1);
 
         int fromYear = getYearFromDate(from);
         int toYear = getYearFromDate(to);
@@ -78,7 +74,7 @@ public final class ChartFileRemoteService implements ChartFileService {
     @Override
     public NavigableSet<ChartFile> findFilesBy(Date from, Date to) {
         Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
-        Assert.isTrue(from.after(LIMIT_DATE), "Dates must be after " + LIMIT_DATE);
+        Assert.isTrue(from.after(LIMIT_DATE), "Dates must be in or after " + getYearFromDate(LIMIT_DATE) + 1);
 
         int fromYear = getYearFromDate(from);
         int toYear = getYearFromDate(to);
