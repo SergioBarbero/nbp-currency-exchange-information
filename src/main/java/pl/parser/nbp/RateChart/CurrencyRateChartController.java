@@ -37,7 +37,7 @@ public class CurrencyRateChartController {
             @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @PathVariable("type") char type) {
         return ChartFileService
-                .findFilesBy(ChartType.valueOf(String.valueOf(type)), startDate, endDate).stream()
+                .findFilesBy(startDate, endDate, ChartType.valueOf(String.valueOf(type))).stream()
                 .filter(file -> ChartType.c.equals(file.getType()))
                 .map(ChartFile::retrieveCurrencyRateChart)
                 .collect(Collectors.toList());

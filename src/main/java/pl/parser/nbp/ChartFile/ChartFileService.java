@@ -6,7 +6,7 @@ import java.util.NavigableSet;
 public interface ChartFileService {
     ChartFile findFileBy(Date date, ChartType type);
 
-    NavigableSet<ChartFile> findFilesBy(ChartType type, Date from, Date to);
+    NavigableSet<ChartFile> findFilesBy(Date from, Date to, ChartType type);
 
     NavigableSet<ChartFile> findFilesBy(Date from, Date to);
 }

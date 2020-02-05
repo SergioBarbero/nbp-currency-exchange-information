@@ -28,7 +28,7 @@ public class CurrencyStatisticsController {
             @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @PathVariable("currency") String currencyCode) {
 
-        SortedSet<ChartFile> filteredList = ChartFileService.findFilesBy(ChartType.c, startDate, endDate);
+        SortedSet<ChartFile> filteredList = ChartFileService.findFilesBy(startDate, endDate, ChartType.c);
         List<PurchasesRate> rates = filteredList.stream()
                 .map(ChartFile::retrieveCurrencyRateChart)
                 .map(CurrencyRateChartC.class::cast)

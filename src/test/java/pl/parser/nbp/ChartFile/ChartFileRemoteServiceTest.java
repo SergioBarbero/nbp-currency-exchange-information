@@ -24,7 +24,7 @@ class ChartFileRemoteServiceTest {
         Date from = new Date(947458800000L);
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> ChartFileService.findFilesBy(ChartType.c, from, to))
+                .isThrownBy(() -> ChartFileService.findFilesBy(from, to, ChartType.c))
                 .withMessage("Dates must be equal or after of 2002");
     }
 
@@ -34,7 +34,7 @@ class ChartFileRemoteServiceTest {
         Date from = new Date(1042153200000L);
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> ChartFileService.findFilesBy(ChartType.c, from, to))
+                .isThrownBy(() -> ChartFileService.findFilesBy(from, to, ChartType.c))
                 .withMessage("First date introduced must be before the second");
     }
 
@@ -61,7 +61,7 @@ class ChartFileRemoteServiceTest {
         Date to = new Date(1136847600000L);
 
         // when
-        NavigableSet<ChartFile> files = ChartFileService.findFilesBy(ChartType.c, from, to);
+        NavigableSet<ChartFile> files = ChartFileService.findFilesBy(from, to, ChartType.c);
 
         // then
         assertThat(files, notNullValue());

@@ -42,13 +42,13 @@ public final class ChartFileRemoteService implements ChartFileService {
 
     /**
      * Retrieves a NavigableSet of ChartFile given a type and two boundary dates
-     * @param type
      * @param from
      * @param to
+     * @param type
      * @return All ChartFiles found
      */
     @Override
-    public NavigableSet<ChartFile> findFilesBy(ChartType type, Date from, Date to) {
+    public NavigableSet<ChartFile> findFilesBy(Date from, Date to, ChartType type) {
         ChartFileDirectory directory = new ChartFileDirectory();
 
         Calendar gregorianCalendarStart = new GregorianCalendar();
