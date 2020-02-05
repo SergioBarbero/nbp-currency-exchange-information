@@ -15,10 +15,9 @@ import java.util.stream.IntStream;
 public final class ChartFileRemoteService implements ChartFileService {
 
     private final static int LIMIT_YEAR = 2002;
-    private final static String RATE_CHART_LIST_BASE_URL = "http://www.nbp.pl/kursy/xml/";
 
     /**
-     * Gets the closer fileName given the date parameter, this means, if exact file was not provided in specified date, the previous to it
+     * Gets the closest fileName given the date parameter, this means, if exact file was not provided in specified date, the previous to it
      * @param date specified date
      * @param type letter of file
      * @return name of the file
@@ -50,6 +49,8 @@ public final class ChartFileRemoteService implements ChartFileService {
      */
     @Override
     public NavigableSet<ChartFile> findFilesBy(ChartType type, Date from, Date to) {
+        ChartFileDirectory directory = new ChartFileDirectory();
+
         Calendar gregorianCalendarStart = new GregorianCalendar();
         gregorianCalendarStart.setTime(from);
         int fromYear = gregorianCalendarStart.get(Calendar.YEAR);
@@ -61,7 +62,9 @@ public final class ChartFileRemoteService implements ChartFileService {
         Assert.isTrue(fromYear >= LIMIT_YEAR && toYear >= LIMIT_YEAR, "Dates must be equal or after of " + LIMIT_YEAR);
         Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
 
-        return this.findFilesBy(from, to).stream()
+        return IntStream.rangeClosed(fromYear, toYear)
+                .mapToObj(directory::findChartFiles)
+                .flatMap(Collection::stream)
                 .filter(file -> file.getType().equals(type))
                 .filter(file -> file.getPublicationDate().before(to) && file.getPublicationDate().after(from))
                 .collect(Collectors.toCollection(TreeSet::new));
@@ -92,6 +95,8 @@ public final class ChartFileRemoteService implements ChartFileService {
 
     private static class ChartFileDirectory {
 
+        private final static String DIRECTORY = "http://www.nbp.pl/kursy/xml/";
+
         private NavigableSet<ChartFile> findChartFiles(int year) {
             try {
                 return Arrays.stream(FileUtil.readContentFromUrl(getUrl(year)).split("\r\n"))
@@ -103,7 +108,7 @@ public final class ChartFileRemoteService implements ChartFileService {
 
         private static String getUrl(int year) {
             int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-            return (year == currentYear) ? RATE_CHART_LIST_BASE_URL + "dir.txt" : RATE_CHART_LIST_BASE_URL + "dir" + year + ".txt";
+            return (year == currentYear) ? DIRECTORY + "dir.txt" : DIRECTORY + "dir" + year + ".txt";
         }
     }
 }

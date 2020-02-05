@@ -1,7 +1,6 @@
 package pl.parser.nbp.Util;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 public final class FileUtil {
@@ -11,8 +10,6 @@ public final class FileUtil {
     }
 
     public static String readContentFromUrl(String url) throws IOException {
-        URL fileUrl = new URL(url);
-        InputStream in = fileUrl.openStream();
-        return new String(in.readAllBytes());
+        return new String(new URL(url).openStream().readAllBytes());
     }
 }
