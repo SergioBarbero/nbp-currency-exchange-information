@@ -1,20 +1,26 @@
 package pl.parser.nbp.ChartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import pl.parser.nbp.Util.DateUtil;
 import pl.parser.nbp.Util.FileUtil;
 
 import java.io.IOException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static pl.parser.nbp.Util.DateUtil.getYearFromDate;
 
 @Service
 public final class ChartFileRemoteService implements ChartFileService {
 
     private final static int LIMIT_YEAR = 2002;
+
+    private final static Date LIMIT_DATE = new GregorianCalendar(2001, Calendar.DECEMBER, 31).getTime();
 
     /**
      * Gets the closest fileName given the date parameter, this means, if exact file was not provided in specified date, the previous to it
@@ -49,18 +55,13 @@ public final class ChartFileRemoteService implements ChartFileService {
      */
     @Override
     public NavigableSet<ChartFile> findFilesBy(Date from, Date to, ChartType type) {
-        ChartFileDirectory directory = new ChartFileDirectory();
-
-        Calendar gregorianCalendarStart = new GregorianCalendar();
-        gregorianCalendarStart.setTime(from);
-        int fromYear = gregorianCalendarStart.get(Calendar.YEAR);
-
-        Calendar gregorianCalendarEnd = new GregorianCalendar();
-        gregorianCalendarEnd.setTime(to);
-        int toYear = gregorianCalendarEnd.get(Calendar.YEAR);
-
-        Assert.isTrue(fromYear >= LIMIT_YEAR && toYear >= LIMIT_YEAR, "Dates must be equal or after of " + LIMIT_YEAR);
         Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
+        Assert.isTrue(from.after(LIMIT_DATE), "Dates must be after " + LIMIT_DATE);
+
+        int fromYear = getYearFromDate(from);
+        int toYear = getYearFromDate(to);
+
+        ChartFileDirectory directory = new ChartFileDirectory();
 
         return IntStream.rangeClosed(fromYear, toYear)
                 .mapToObj(directory::findChartFiles)
@@ -76,16 +77,11 @@ public final class ChartFileRemoteService implements ChartFileService {
      */
     @Override
     public NavigableSet<ChartFile> findFilesBy(Date from, Date to) {
-        Calendar gregorianCalendarStart = new GregorianCalendar();
-        gregorianCalendarStart.setTime(from);
-        int fromYear = gregorianCalendarStart.get(Calendar.YEAR);
-
-        Calendar gregorianCalendarEnd = new GregorianCalendar();
-        gregorianCalendarEnd.setTime(to);
-        int toYear = gregorianCalendarEnd.get(Calendar.YEAR);
-
-        Assert.isTrue(fromYear >= LIMIT_YEAR && toYear >= LIMIT_YEAR, "Dates must be equal or after of " + LIMIT_YEAR);
         Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
+        Assert.isTrue(from.after(LIMIT_DATE), "Dates must be after " + LIMIT_DATE);
+
+        int fromYear = getYearFromDate(from);
+        int toYear = getYearFromDate(to);
 
         return IntStream.rangeClosed(fromYear, toYear)
                 .mapToObj(year -> new ChartFileDirectory().findChartFiles(year))
