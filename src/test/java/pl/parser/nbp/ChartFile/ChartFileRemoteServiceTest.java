@@ -61,8 +61,11 @@ class ChartFileRemoteServiceTest {
         Date from = getDateFromStringWithFormatYYMMDD("010110");
         Date to = getDateFromStringWithFormatYYMMDD("010102");
 
+        // when
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> chartFileService.findFilesBy(from, to, ChartType.c))
+
+                // then
                 .withMessage("First date introduced must be before or equals the second");
     }
 
@@ -71,8 +74,11 @@ class ChartFileRemoteServiceTest {
         // given
         Date date = getDateFromStringWithFormatYYMMDD("010110");
 
+        // when
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> chartFileService.findFileBy(date, ChartType.c))
+
+                // then
                 .withMessage("Date must be in or after 2002");
     }
 
