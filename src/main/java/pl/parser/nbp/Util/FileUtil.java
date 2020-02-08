@@ -10,6 +10,6 @@ public final class FileUtil {
     }
 
     public static String readContentFromUrl(String url) throws IOException {
-        return new String(new URL(url).openStream().readAllBytes());
+        return new String(new URL(url).openStream().readAllBytes()).substring(1);
     }
 }

@@ -26,7 +26,7 @@ public final class ChartFile implements Comparable<ChartFile> {
 
     public ChartFile(String fileName) {
         String formattedDate = fileName.substring(fileName.length() - 6);
-        Date publicationDate = null;
+        Date publicationDate;
         try {
             publicationDate = PUBLICATION_DATE_FORMAT.parse(formattedDate);
         } catch (ParseException e) {

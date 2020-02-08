@@ -18,17 +18,17 @@ import java.util.stream.Collectors;
 public class CurrencyRateChartController {
     private final static DateFormat PUBLICATION_DATE_FORMAT = new SimpleDateFormat("yyyy");
 
-    private final ChartFileService ChartFileService;
+    private final ChartFileService chartFileService;
 
     public CurrencyRateChartController(ChartFileService ChartFileService) {
-        this.ChartFileService = ChartFileService;
+        this.chartFileService = ChartFileService;
     }
 
     @GetMapping("/currency-chart/{date}/{type}")
     public CurrencyRateChart getCurrencyRateChart(
             @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
             @PathVariable("type") char type) {
-        return ChartFileService.findFileBy(date, ChartType.valueOf(String.valueOf(type))).retrieveCurrencyRateChart();
+        return chartFileService.findFileBy(date, ChartType.valueOf(String.valueOf(type))).retrieveCurrencyRateChart();
     }
 
     @GetMapping("/currency-chart/{start-date}/{end-date}/{type}")
@@ -36,7 +36,7 @@ public class CurrencyRateChartController {
             @PathVariable("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @PathVariable("type") char type) {
-        return ChartFileService
+        return chartFileService
                 .findFilesBy(startDate, endDate, ChartType.valueOf(String.valueOf(type))).stream()
                 .filter(file -> ChartType.c.equals(file.getType()))
                 .map(ChartFile::retrieveCurrencyRateChart)
