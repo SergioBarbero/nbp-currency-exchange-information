@@ -58,7 +58,7 @@ public final class ChartFileServiceImpl implements ChartFileService {
                 .mapToObj(directory::findChartFiles)
                 .flatMap(Collection::stream)
                 .filter(file -> file.getType().equals(type))
-                .filter(file -> file.getPublicationDate().before(to) && file.getPublicationDate().after(from))
+                .filter(file -> file.getPublicationDate().after(from) && file.getPublicationDate().before(to))
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 
@@ -77,6 +77,7 @@ public final class ChartFileServiceImpl implements ChartFileService {
         return IntStream.rangeClosed(fromYear, toYear)
                 .mapToObj(directory::findChartFiles)
                 .flatMap(Collection::stream)
+                .filter(file -> file.getPublicationDate().after(from) && file.getPublicationDate().before(to))
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 

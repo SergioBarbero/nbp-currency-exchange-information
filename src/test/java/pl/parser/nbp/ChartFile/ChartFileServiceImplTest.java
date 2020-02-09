@@ -41,7 +41,7 @@ class ChartFileServiceImplTest {
         chartFiles.add(new ChartFile("c007z190108"));
         chartFiles.add(new ChartFile("c008z190109"));
         chartFiles.add(new ChartFile("b009z190113"));
-        chartFiles.add(new ChartFile("c0010z190115"));
+        chartFiles.add(new ChartFile("c010z190115"));
     }
 
 
@@ -88,6 +88,21 @@ class ChartFileServiceImplTest {
         assertThat(files.size()).isEqualTo(4);
         assertThat(files.stream().map(ChartFile::getType).toArray())
                 .isEqualTo(IntStream.range(0, 4).mapToObj(x -> ChartType.c).toArray());
+    }
+
+    @Test
+    void shouldFindFilesByDates() throws ParseException {
+        // given
+        when(directory.findChartFiles(2019)).thenReturn(chartFiles);
+        Date from = format.parse("190103");
+        Date to = format.parse("190110");
+
+        // when
+        NavigableSet<ChartFile> files = chartFileService.findFilesBy(from, to);
+
+        // then
+        assertThat(files).isNotNull();
+        assertThat(files.size()).isEqualTo(6);
     }
 
     @Test
