@@ -9,7 +9,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class DirectoryTest {
 
-    private ChartFileRemoteService.Directory directory = new ChartFileRemoteService.Directory();
+    private FilesDirectory directory = new FilesDirectory();
 
     @Test
     void shouldRetrieveDataFromRemoteServer() {

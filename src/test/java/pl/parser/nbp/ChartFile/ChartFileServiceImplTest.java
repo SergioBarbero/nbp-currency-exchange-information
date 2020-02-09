@@ -12,15 +12,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.NavigableSet;
 import java.util.TreeSet;
+import java.util.stream.IntStream;
 
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class ChartFileRemoteServiceTest {
+class ChartFileServiceImplTest {
 
     DateFormat format = new SimpleDateFormat("yyMMdd");
 
@@ -28,7 +26,7 @@ class ChartFileRemoteServiceTest {
     private ChartFileService chartFileService;
 
     @MockBean
-    private ChartFileRemoteService.Directory directory;
+    private FilesDirectory directory;
 
     private static NavigableSet<ChartFile> chartFiles  = new TreeSet<>();
 
@@ -37,12 +35,12 @@ class ChartFileRemoteServiceTest {
         chartFiles.add(new ChartFile("a001z190102"));
         chartFiles.add(new ChartFile("c002z190103"));
         chartFiles.add(new ChartFile("c003z190104"));
-        chartFiles.add(new ChartFile("a004z190105"));
+        chartFiles.add(new ChartFile("h004z190105"));
         chartFiles.add(new ChartFile("a005z190106"));
         chartFiles.add(new ChartFile("c006z190107"));
         chartFiles.add(new ChartFile("c007z190108"));
         chartFiles.add(new ChartFile("c008z190109"));
-        chartFiles.add(new ChartFile("c009z190113"));
+        chartFiles.add(new ChartFile("b009z190113"));
         chartFiles.add(new ChartFile("c0010z190115"));
     }
 
@@ -50,8 +48,8 @@ class ChartFileRemoteServiceTest {
     @Test
     void shouldThrowIllegalArgumentException_OnFindFilesBy_WhenPassedIncorrectDates() throws ParseException {
         // given
-        Date to = format.parse("010110");
         Date from = format.parse("010102");
+        Date to = format.parse("010110");
 
         // when
         assertThatIllegalArgumentException()
@@ -76,6 +74,23 @@ class ChartFileRemoteServiceTest {
     }
 
     @Test
+    void shouldFindFilesByDatesAndChartType() throws ParseException {
+        // given
+        when(directory.findChartFiles(2019)).thenReturn(chartFiles);
+        Date from = format.parse("190103");
+        Date to = format.parse("190110");
+
+        // when
+        NavigableSet<ChartFile> files = chartFileService.findFilesBy(from, to, ChartType.c);
+
+        // then
+        assertThat(files).isNotNull();
+        assertThat(files.size()).isEqualTo(4);
+        assertThat(files.stream().map(ChartFile::getType).toArray())
+                .isEqualTo(IntStream.range(0, 4).mapToObj(x -> ChartType.c).toArray());
+    }
+
+    @Test
     void shouldThrowIllegalArgumentException_OnFindFileBy_WhenPassedIncorrectDate() throws ParseException {
         // given
         Date date = format.parse("010110");
@@ -89,17 +104,16 @@ class ChartFileRemoteServiceTest {
     }
 
     @Test
-    void shouldFindFilesByDatesAndChartType() throws ParseException {
+    void shouldThrowFileNotFoundException_OnFindFileBy_WhenFileNotFound() throws ParseException {
         // given
         when(directory.findChartFiles(2019)).thenReturn(chartFiles);
-        Date from = format.parse("190103");
-        Date to = format.parse("190110");
+        Date date = format.parse("190110");
 
         // when
-        NavigableSet<ChartFile> files = chartFileService.findFilesBy(from, to, ChartType.c);
+        assertThatExceptionOfType(FileNotFoundException.class)
+                .isThrownBy(() -> chartFileService.findFileBy(date, ChartType.c))
+                .withMessage("Chart from 2019-01-10 was not found");
 
-        // then
-        assertThat(files, notNullValue());
     }
 
     @Test
@@ -112,7 +126,7 @@ class ChartFileRemoteServiceTest {
         ChartFile file = chartFileService.findFileBy(date, ChartType.c);
 
         // then
-        assertThat(file.getPublicationDate(), is(date));
+        assertThat(file).isEqualByComparingTo(new ChartFile("c002z190103"));
     }
 
 }
