@@ -3,22 +3,24 @@ package pl.parser.nbp.ChartFile;
 import org.junit.jupiter.api.Test;
 import pl.parser.nbp.RateChart.CurrencyRateChart;
 
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ChartFileTest {
 
+    private static final DateFormat FORMAT = new SimpleDateFormat("yyMMdd");
+
     @Test
-    public void shouldThrowIllegalArgumentException_WhenTypeIsUnknown() throws ParseException {
+    public void shouldThrowIllegalArgumentException_WhenTypeIsUnknown() {
         assertThatIllegalArgumentException().isThrownBy(() -> new ChartFile("d003z200107"));
     }
 
     @Test
-    public void shouldThrowIllegalArgumentException_WhenTypeIsNotC() throws ParseException {
+    public void shouldThrowIllegalArgumentException_WhenTypeIsNotC() {
         // given
         ChartFile chartFile = new ChartFile("a003z200107");
 
@@ -27,24 +29,24 @@ public class ChartFileTest {
     }
 
     @Test
-    public void shouldRetrieveCurrencyRateChart() throws ParseException {
+    public void shouldRetrieveCurrencyRateChart() {
         // given
-        ChartFile chartFile = new ChartFile("c003z200107");
+        ChartFile chartFile = new ChartFile("c002z190103");
 
         // when
         CurrencyRateChart currencyRateChart = chartFile.retrieveCurrencyRateChart();
 
         // then
-        assertThat(currencyRateChart, notNullValue());
+        assertThat(currencyRateChart).isNotNull();
     }
 
     @Test
-    public void shouldGetUrl() throws ParseException {
+    public void shouldGetUrl() {
         // given
         ChartFile chartFile = new ChartFile("c003z200107");
 
         // when then
-        assertThat(chartFile.getUrl(), is("http://www.nbp.pl/kursy/xml/c003z200107.xml"));
+        assertThat(chartFile.getUrl()).isEqualTo("http://www.nbp.pl/kursy/xml/c003z200107.xml");
     }
 
     @Test
@@ -53,7 +55,7 @@ public class ChartFileTest {
         ChartFile chartFile = new ChartFile("c003z200107");
 
         // when then
-        assertThat(chartFile.getPublicationDate(), is(equalTo(new Date())));
-        assertThat(chartFile.getType(), is(equalTo('c')));
+        assertThat(chartFile.getPublicationDate()).isEqualTo(FORMAT.parse("200107"));
+        assertThat(chartFile.getType()).isEqualTo(ChartType.c);
     }
 }

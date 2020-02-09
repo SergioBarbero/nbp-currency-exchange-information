@@ -3,11 +3,12 @@ package pl.parser.nbp.ChartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.util.Assert;
+import org.springframework.web.client.RestTemplate;
 import pl.parser.nbp.RateChart.CurrencyRateChart;
 import pl.parser.nbp.RateChart.CurrencyRateChartC;
-import pl.parser.nbp.Util.FileUtil;
 
-import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,9 +54,8 @@ public final class ChartFile implements Comparable<ChartFile> {
         Assert.isTrue(this.type.equals(ChartType.c), "This kind of chart is not allowed");
         CurrencyRateChartC currencyRateChartC;
         try {
-            String urlContent = FileUtil.readContentFromUrl(this.getUrl());
-            currencyRateChartC = XML_MAPPER.readValue(urlContent, CurrencyRateChartC.class);
-        } catch (IOException e) {
+            currencyRateChartC = new RestTemplate().getForObject(new URI(this.getUrl()), CurrencyRateChartC.class);
+        } catch (URISyntaxException e) {
             throw new ChartNotLoadedException("Chart file " + this.getFileName() + " couldn't be loaded");
         }
         return currencyRateChartC;
