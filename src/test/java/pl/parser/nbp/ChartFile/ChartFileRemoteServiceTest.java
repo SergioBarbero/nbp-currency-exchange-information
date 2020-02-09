@@ -5,9 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import pl.parser.nbp.Util.DateUtil;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.NavigableSet;
 import java.util.TreeSet;
@@ -17,10 +18,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
-import static pl.parser.nbp.Util.DateUtil.getDateFromStringWithFormatYYMMDD;
 
 @SpringBootTest
 class ChartFileRemoteServiceTest {
+
+    DateFormat format = new SimpleDateFormat("yyMMdd");
 
     @Autowired
     private ChartFileService chartFileService;
@@ -38,14 +40,18 @@ class ChartFileRemoteServiceTest {
         chartFiles.add(new ChartFile("a004z190105"));
         chartFiles.add(new ChartFile("a005z190106"));
         chartFiles.add(new ChartFile("c006z190107"));
+        chartFiles.add(new ChartFile("c007z190108"));
+        chartFiles.add(new ChartFile("c008z190109"));
+        chartFiles.add(new ChartFile("c009z190113"));
+        chartFiles.add(new ChartFile("c0010z190115"));
     }
 
 
     @Test
     void shouldThrowIllegalArgumentException_OnFindFilesBy_WhenPassedIncorrectDates() throws ParseException {
         // given
-        Date to = getDateFromStringWithFormatYYMMDD("010110");
-        Date from = getDateFromStringWithFormatYYMMDD("010102");
+        Date to = format.parse("010110");
+        Date from = format.parse("010102");
 
         // when
         assertThatIllegalArgumentException()
@@ -58,8 +64,8 @@ class ChartFileRemoteServiceTest {
     @Test
     void shouldThrowIllegalArgumentException_OnFindFilesBy_WhenPassedSwappedDates() throws ParseException {
         // given
-        Date from = getDateFromStringWithFormatYYMMDD("010110");
-        Date to = getDateFromStringWithFormatYYMMDD("010102");
+        Date from = format.parse("010110");
+        Date to = format.parse("010102");
 
         // when
         assertThatIllegalArgumentException()
@@ -72,7 +78,7 @@ class ChartFileRemoteServiceTest {
     @Test
     void shouldThrowIllegalArgumentException_OnFindFileBy_WhenPassedIncorrectDate() throws ParseException {
         // given
-        Date date = getDateFromStringWithFormatYYMMDD("010110");
+        Date date = format.parse("010110");
 
         // when
         assertThatIllegalArgumentException()
@@ -86,8 +92,8 @@ class ChartFileRemoteServiceTest {
     void shouldFindFilesByDatesAndChartType() throws ParseException {
         // given
         when(directory.findChartFiles(2019)).thenReturn(chartFiles);
-        Date from = getDateFromStringWithFormatYYMMDD("190103");
-        Date to = getDateFromStringWithFormatYYMMDD("190110");
+        Date from = format.parse("190103");
+        Date to = format.parse("190110");
 
         // when
         NavigableSet<ChartFile> files = chartFileService.findFilesBy(from, to, ChartType.c);
@@ -100,7 +106,7 @@ class ChartFileRemoteServiceTest {
     void shouldFindFile() throws ParseException {
         // given
         when(directory.findChartFiles(2019)).thenReturn(chartFiles);
-        Date date = getDateFromStringWithFormatYYMMDD("190103");
+        Date date = format.parse("190103");
 
         // when
         ChartFile file = chartFileService.findFileBy(date, ChartType.c);

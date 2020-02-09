@@ -18,9 +18,4 @@ public final class DateUtil {
         gregorianCalendarEnd.setTime(date);
         return gregorianCalendarEnd.get(Calendar.YEAR);
     }
-
-    public static Date getDateFromStringWithFormatYYMMDD(String date) throws ParseException {
-        DateFormat format = new SimpleDateFormat("yyMMdd");
-        return format.parse(date);
-    }
 }
