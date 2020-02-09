@@ -1,9 +1,11 @@
 package pl.parser.nbp.ChartFile;
 
 import org.springframework.stereotype.Service;
-import pl.parser.nbp.Util.FileUtil;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.NavigableSet;
@@ -17,10 +19,9 @@ public class FilesDirectory {
 
     public NavigableSet<ChartFile> findChartFiles(int year) {
         try {
-            return Arrays.stream(FileUtil.readContentFromUrl(getUrl(year))
-                    .split("\r\n"))
+            return Arrays.stream(new RestTemplate().getForObject(new URI(getUrl(year)), String.class).substring(3).split("\r\n"))
                     .map(ChartFile::new).collect(Collectors.toCollection(TreeSet::new));
-        } catch (IOException e) {
+        } catch (URISyntaxException | HttpClientErrorException e) {
             throw new FileNotLoadedException("File couldn't be retrieved", e);
         }
     }
