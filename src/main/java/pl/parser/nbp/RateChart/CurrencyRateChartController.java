@@ -8,16 +8,12 @@ import pl.parser.nbp.ChartFile.ChartFile;
 import pl.parser.nbp.ChartFile.ChartType;
 import pl.parser.nbp.ChartFile.ChartFileService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 public class CurrencyRateChartController {
-    private final static DateFormat PUBLICATION_DATE_FORMAT = new SimpleDateFormat("yyyy");
-
     private final ChartFileService chartFileService;
 
     public CurrencyRateChartController(ChartFileService ChartFileService) {
