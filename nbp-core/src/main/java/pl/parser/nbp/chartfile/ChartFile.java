@@ -16,7 +16,7 @@ import java.util.Date;
 public final class ChartFile implements Comparable<ChartFile> {
 
     private static final String BASE_URL = "http://www.nbp.pl/kursy/xml/";
-    private static final ObjectMapper objectMapper = new XmlMapper();
+    private static final ObjectMapper XML_MAPPER = new XmlMapper();
     private static final DateFormat PUBLICATION_DATE_FORMAT = new SimpleDateFormat("yyMMdd");
     private static final char COMMON_LETTER = 'z';
 
@@ -53,7 +53,7 @@ public final class ChartFile implements Comparable<ChartFile> {
         Assert.isTrue(this.type.equals(ChartType.c), "This kind of chart is not allowed");
         CurrencyRateChartC currencyRateChartC;
         try {
-            currencyRateChartC = objectMapper.readValue(new URL(this.getUrl()), CurrencyRateChartC.class);
+            currencyRateChartC = XML_MAPPER.readValue(new URL(this.getUrl()), CurrencyRateChartC.class);
         } catch (IOException e) {
             throw new ChartNotLoadedException("Chart file " + this.getFileName() + " couldn't be loaded");
         }
@@ -67,6 +67,7 @@ public final class ChartFile implements Comparable<ChartFile> {
     @Override
     public int compareTo(ChartFile o) {
         int dateComparison = this.getPublicationDate().compareTo(o.getPublicationDate());
-        return dateComparison == 0 ? String.valueOf(type).compareTo(String.valueOf(o.type)) : dateComparison;
+        int typeComparison = Integer.compare(0, String.valueOf(type).compareTo(String.valueOf(o.type)));
+        return dateComparison == 0 ? typeComparison : dateComparison;
     }
 }
