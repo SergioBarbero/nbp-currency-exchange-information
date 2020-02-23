@@ -1,12 +1,13 @@
 package pl.parser.nbp.chartfile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.util.Assert;
-import org.springframework.web.client.RestTemplate;
 import pl.parser.nbp.ratechart.CurrencyRateChart;
 import pl.parser.nbp.ratechart.CurrencyRateChartC;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,9 +15,10 @@ import java.util.Date;
 
 public final class ChartFile implements Comparable<ChartFile> {
 
-    private final static String BASE_URL = "http://www.nbp.pl/kursy/xml/";
-    private final static DateFormat PUBLICATION_DATE_FORMAT = new SimpleDateFormat("yyMMdd");
-    private final static char COMMON_LETTER = 'z';
+    private static final String BASE_URL = "http://www.nbp.pl/kursy/xml/";
+    private static final ObjectMapper objectMapper = new XmlMapper();
+    private static final DateFormat PUBLICATION_DATE_FORMAT = new SimpleDateFormat("yyMMdd");
+    private static final char COMMON_LETTER = 'z';
 
     private final String tableReference;
     private final Date publicationDate;
@@ -51,8 +53,8 @@ public final class ChartFile implements Comparable<ChartFile> {
         Assert.isTrue(this.type.equals(ChartType.c), "This kind of chart is not allowed");
         CurrencyRateChartC currencyRateChartC;
         try {
-            currencyRateChartC = new RestTemplate().getForObject(new URI(this.getUrl()), CurrencyRateChartC.class);
-        } catch (URISyntaxException e) {
+            currencyRateChartC = objectMapper.readValue(new URL(this.getUrl()), CurrencyRateChartC.class);
+        } catch (IOException e) {
             throw new ChartNotLoadedException("Chart file " + this.getFileName() + " couldn't be loaded");
         }
         return currencyRateChartC;

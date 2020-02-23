@@ -30,6 +30,6 @@ public class NbpDirectoryClient implements DirectoryService {
 
     private static String getUrl(int year) {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        return (year == currentYear) ? URL + "dir.txt" : URL + "dir" + year + ".txt";
+        return year == currentYear ? URL + "dir.txt" : URL + "dir" + year + ".txt";
     }
 }
