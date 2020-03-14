@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static pl.parser.nbp.util.DateUtil.getYearFromDate;
+import static pl.parser.nbp.util.DateUtil.*;
 
 @Service
 public final class ChartFileServiceImpl implements ChartFileService {

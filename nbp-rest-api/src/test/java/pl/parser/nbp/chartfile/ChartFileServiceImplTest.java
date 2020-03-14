@@ -2,9 +2,6 @@ package pl.parser.nbp.chartfile;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,20 +12,17 @@ import java.util.TreeSet;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-class ChartFileServiceImplTest {
+public class ChartFileServiceImplTest {
 
-    DateFormat format = new SimpleDateFormat("yyMMdd");
+    private static final DateFormat FORMAT = new SimpleDateFormat("yyMMdd");
 
-    @Autowired
-    private ChartFileService chartFileService;
+    protected DirectoryService directoryService = mock(DirectoryService.class);
+    protected ChartFileService chartFileService = new ChartFileServiceImpl(directoryService);
 
-    @MockBean
-    private DirectoryService directoryService;
-
-    private static NavigableSet<ChartFile> chartFiles  = new TreeSet<>();
+    protected static NavigableSet<ChartFile> chartFiles  = new TreeSet<>();
 
     @BeforeAll
     static void init() {
@@ -46,10 +40,10 @@ class ChartFileServiceImplTest {
 
 
     @Test
-    void shouldThrowIllegalArgumentException_OnFindFilesBy_WhenPassedIncorrectDates() throws ParseException {
+    public void shouldThrowIllegalArgumentException_OnFindFilesBy_WhenPassedIncorrectDates() throws ParseException {
         // given
-        Date from = format.parse("010102");
-        Date to = format.parse("010110");
+        Date from = FORMAT.parse("010102");
+        Date to = FORMAT.parse("010110");
 
         // when
         assertThatIllegalArgumentException()
@@ -60,10 +54,10 @@ class ChartFileServiceImplTest {
     }
 
     @Test
-    void shouldThrowIllegalArgumentException_OnFindFilesBy_WhenPassedSwappedDates() throws ParseException {
+    public void shouldThrowIllegalArgumentException_OnFindFilesBy_WhenPassedSwappedDates() throws ParseException {
         // given
-        Date from = format.parse("010110");
-        Date to = format.parse("010102");
+        Date from = FORMAT.parse("010110");
+        Date to = FORMAT.parse("010102");
 
         // when
         assertThatIllegalArgumentException()
@@ -74,11 +68,11 @@ class ChartFileServiceImplTest {
     }
 
     @Test
-    void shouldFindFilesByDatesAndChartType() throws ParseException {
+    public void shouldFindFilesByDatesAndChartType() throws ParseException {
         // given
         when(directoryService.findChartFiles(2019)).thenReturn(chartFiles);
-        Date from = format.parse("190103");
-        Date to = format.parse("190110");
+        Date from = FORMAT.parse("190103");
+        Date to = FORMAT.parse("190110");
 
         // when
         NavigableSet<ChartFile> files = chartFileService.findFilesBy(from, to, ChartType.c);
@@ -94,8 +88,8 @@ class ChartFileServiceImplTest {
     void shouldFindFilesByDates() throws ParseException {
         // given
         when(directoryService.findChartFiles(2019)).thenReturn(chartFiles);
-        Date from = format.parse("190103");
-        Date to = format.parse("190110");
+        Date from = FORMAT.parse("190103");
+        Date to = FORMAT.parse("190110");
 
         // when
         NavigableSet<ChartFile> files = chartFileService.findFilesBy(from, to);
@@ -108,7 +102,7 @@ class ChartFileServiceImplTest {
     @Test
     void shouldThrowIllegalArgumentException_OnFindFileBy_WhenPassedIncorrectDate() throws ParseException {
         // given
-        Date date = format.parse("010110");
+        Date date = FORMAT.parse("010110");
 
         // when
         assertThatIllegalArgumentException()
@@ -122,7 +116,7 @@ class ChartFileServiceImplTest {
     void shouldThrowFileNotFoundException_OnFindFileBy_WhenFileNotFound() throws ParseException {
         // given
         when(directoryService.findChartFiles(2019)).thenReturn(chartFiles);
-        Date date = format.parse("190110");
+        Date date = FORMAT.parse("190110");
 
         // when
         assertThatExceptionOfType(FileNotFoundException.class)
@@ -135,7 +129,7 @@ class ChartFileServiceImplTest {
     void shouldFindFile() throws ParseException {
         // given
         when(directoryService.findChartFiles(2019)).thenReturn(chartFiles);
-        Date date = format.parse("190103");
+        Date date = FORMAT.parse("190103");
 
         // when
         ChartFile file = chartFileService.findFileBy(date, ChartType.c);

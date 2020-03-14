@@ -56,4 +56,8 @@ public class CurrencyRateChartC extends CurrencyRateChart {
     public void setCurrencies(List<PurchasesRate> currencies) {
         this.currencies = currencies;
     }
+
+    public PurchasesRate getRateByCurrency(String currencyCode) {
+        return this.getCurrencies().stream().filter(PurchasesRate -> PurchasesRate.getCurrencyCode().equals(currencyCode)).findFirst().get();
+    }
 }
