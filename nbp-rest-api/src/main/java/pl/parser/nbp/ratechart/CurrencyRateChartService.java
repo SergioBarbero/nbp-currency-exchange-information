@@ -30,10 +30,15 @@ public class CurrencyRateChartService {
     }
 
     public List<CurrencyRateChart> getCurrencyRateCharts(Date startDate, Date endDate, ChartType type) {
-        return chartFileService.findFilesBy(startDate, endDate, type).stream()
+        List<CurrencyRateChart> currencyRateCharts = chartFileService.findFilesBy(startDate, endDate, type).stream()
                 .filter(file -> ChartType.c.equals(file.getType()))
                 .map(ChartFile::retrieveCurrencyRateChart)
                 .collect(Collectors.toList());
+        if (currencyRateCharts.isEmpty()) {
+            throw new FileNotFoundException("There was no charts from "
+                    + PUBLICATION_DATE_FORMAT.format(startDate) + " to " + PUBLICATION_DATE_FORMAT.format(endDate));
+        }
+        return currencyRateCharts;
     }
 
 

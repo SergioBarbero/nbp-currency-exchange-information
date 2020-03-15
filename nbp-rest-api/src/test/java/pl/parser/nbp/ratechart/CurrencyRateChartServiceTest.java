@@ -8,15 +8,18 @@ import org.junit.jupiter.api.Test;
 import pl.parser.nbp.chartfile.ChartFile;
 import pl.parser.nbp.chartfile.ChartFileService;
 import pl.parser.nbp.chartfile.ChartType;
+import pl.parser.nbp.chartfile.FileNotFoundException;
 import pl.parser.nbp.rate.CurrencyCode;
 import pl.parser.nbp.rate.PurchasesRate;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -39,7 +42,9 @@ public class CurrencyRateChartServiceTest {
             new PurchasesRate("dollar", 1, CurrencyCode.USD, 1L, 1L)
     );
 
-    void shouldGetListOfCurrencyCharts() throws ParseException {}
+    void shouldGetListOfCurrencyCharts() throws ParseException {
+
+    }
 
     @Test
     void shouldGetCurrencyChart() throws ParseException {
@@ -60,9 +65,26 @@ public class CurrencyRateChartServiceTest {
         assertThat(chart.getUid()).isEqualTo("c003z190104");
     }
 
+    @Test
     void shouldFail_WhenNotFindingCurrencyChart() throws ParseException {
         Date date = FORMAT.parse("190103");
+        given(chartFileService.findFileBy(date, ChartType.c)).willReturn(Optional.empty());
+
+        assertThatExceptionOfType(FileNotFoundException.class)
+                .isThrownBy(() -> currencyRateChartService.getCurrencyRateChart(date, ChartType.c))
+                .withMessage("Chart from 2019-01-03 was not found");
     }
 
-    void shouldFail_WhenFindingNoCurrencyCharts() {}
+    @Test
+    void shouldFail_WhenFindingNoCurrencyCharts() throws ParseException {
+        Date from = FORMAT.parse("190103");
+        Date to = FORMAT.parse("190107");
+
+        given(chartFileService.findFilesBy(from, to, ChartType.c)).willReturn(new HashSet<>());
+
+        assertThatExceptionOfType(FileNotFoundException.class)
+                .isThrownBy(() -> currencyRateChartService.getCurrencyRateCharts(from, to, ChartType.c))
+                .withMessage("There was no charts from 2019-01-03 to 2019-01-07");
+
+    }
 }
