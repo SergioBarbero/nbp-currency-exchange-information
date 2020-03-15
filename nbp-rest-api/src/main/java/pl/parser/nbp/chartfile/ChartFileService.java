@@ -2,15 +2,16 @@ package pl.parser.nbp.chartfile;
 
 import java.util.Date;
 import java.util.NavigableSet;
+import java.util.Optional;
 
 public interface ChartFileService {
     /**
      * Finds file by Date and type
      * @param date To find file
      * @param type ChartType to find
-     * @return ChartFile found, null if was not found
+     * @return ChartFile if found, empty optional if not
      */
-    ChartFile findFileBy(Date date, ChartType type);
+    Optional<ChartFile> findFileBy(Date date, ChartType type);
 
     /**
      * Find files from date to date

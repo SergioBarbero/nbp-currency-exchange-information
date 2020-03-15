@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.NavigableSet;
+import java.util.Optional;
 import java.util.TreeSet;
 import java.util.stream.IntStream;
 
@@ -113,16 +114,15 @@ public class ChartFileServiceImplTest {
     }
 
     @Test
-    void shouldThrowFileNotFoundException_OnFindFileBy_WhenFileNotFound() throws ParseException {
+    void shouldReturnEmptyOptional_OnFindFileBy_WhenFileNotFound() throws ParseException {
         // given
         when(directoryService.findChartFiles(2019)).thenReturn(chartFiles);
         Date date = FORMAT.parse("190110");
 
-        // when
-        assertThatExceptionOfType(FileNotFoundException.class)
-                .isThrownBy(() -> chartFileService.findFileBy(date, ChartType.c))
-                .withMessage("Chart from 2019-01-10 was not found");
+        Optional<ChartFile> fileBy = chartFileService.findFileBy(date, ChartType.c);
 
+        // then
+        assertThat(fileBy).isEmpty();
     }
 
     @Test
@@ -132,7 +132,7 @@ public class ChartFileServiceImplTest {
         Date date = FORMAT.parse("190103");
 
         // when
-        ChartFile file = chartFileService.findFileBy(date, ChartType.c);
+        ChartFile file = chartFileService.findFileBy(date, ChartType.c).get();
 
         // then
         assertThat(file).isEqualByComparingTo(new ChartFile("c002z190103"));

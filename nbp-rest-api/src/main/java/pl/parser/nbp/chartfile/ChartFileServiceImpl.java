@@ -23,14 +23,13 @@ public final class ChartFileServiceImpl implements ChartFileService {
     }
 
     @Override
-    public ChartFile findFileBy(Date date, ChartType type) {
+    public Optional<ChartFile> findFileBy(Date date, ChartType type) {
         Assert.isTrue(date.after(LIMIT_DATE), "Date must be in or after " + (getYearFromDate(LIMIT_DATE) + 1));
         int year = getYearFromDate(date);
 
         return directoryService.findChartFiles(year).stream()
                 .filter(e -> e.getType().equals(type) && e.getPublicationDate().equals(date))
-                .findAny()
-                .orElseThrow(() -> new FileNotFoundException("Chart from " + PUBLICATION_DATE_FORMAT.format(date) + " was not found"));
+                .findAny();
     }
 
     @Override

@@ -52,8 +52,8 @@ public class CurrencyRateChartServiceTest {
         // given
         Date date = FORMAT.parse("190103");
         CurrencyRateChart currencyRateChart = new CurrencyRateChartC('c',"c003z190104", date, purchasesRates);
-        given(chartFileService.findFileBy(date, ChartType.c)).willReturn(mock(ChartFile.class));
-        given(chartFileService.findFileBy(date, ChartType.c).retrieveCurrencyRateChart()).willReturn(currencyRateChart);
+        given(chartFileService.findFileBy(date, ChartType.c)).willReturn(Optional.of(mock(ChartFile.class)));
+        given(chartFileService.findFileBy(date, ChartType.c).get().retrieveCurrencyRateChart()).willReturn(currencyRateChart);
 
         // when
         CurrencyRateChartC chart = (CurrencyRateChartC) currencyRateChartService.getCurrencyRateChart(date, ChartType.c);
