@@ -2,18 +2,18 @@ package pl.parser.nbp.chartfile;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.NavigableSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DirectoryTest {
 
-    private DirectoryService directoryService = new NbpDirectoryClient();
+    private final DirectoryService directoryService = new NbpDirectoryClient();
 
     @Test
     void shouldRetrieveDataFromRemoteServer() {
-        NavigableSet<ChartFile> chartFiles = directoryService.findChartFiles(2019);
+        Set<ChartFile> chartFiles = directoryService.findChartFiles(2019);
 
         assertThat(chartFiles).isNotNull();
         assertThat(chartFiles.size()).isGreaterThan(0);

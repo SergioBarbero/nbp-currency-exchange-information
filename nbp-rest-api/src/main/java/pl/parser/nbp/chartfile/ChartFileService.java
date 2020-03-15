@@ -1,8 +1,8 @@
 package pl.parser.nbp.chartfile;
 
 import java.util.Date;
-import java.util.NavigableSet;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ChartFileService {
     /**
@@ -17,16 +17,16 @@ public interface ChartFileService {
      * Find files from date to date
      * @param from Date low threshold
      * @param to Date high threshold
-     * @return NavigableSet<ChartFile> returned
+     * @return Set<ChartFile> returned
      */
-    NavigableSet<ChartFile> findFilesBy(Date from, Date to);
+    Set<ChartFile> findFilesBy(Date from, Date to);
 
     /**
      * Find files from date to date and a type
      * @param from Date low threshold
      * @param to Date high threshold
      * @param type ChartType given
-     * @return NavigableSet<ChartFile> returned
+     * @return Set<ChartFile> returned
      */
-    NavigableSet<ChartFile> findFilesBy(Date from, Date to, ChartType type);
+    Set<ChartFile> findFilesBy(Date from, Date to, ChartType type);
 }

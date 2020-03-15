@@ -1,5 +1,8 @@
 package pl.parser.nbp.ratechart;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pl.parser.nbp.chartfile.ChartFile;
@@ -16,7 +19,6 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class CurrencyRateChartServiceTest {
 
@@ -25,25 +27,17 @@ public class CurrencyRateChartServiceTest {
     private final ChartFileService chartFileService = mock(ChartFileService.class);
     private final CurrencyRateChartService currencyRateChartService = new CurrencyRateChartService(chartFileService);
 
-    private static NavigableSet<ChartFile> chartFiles = new TreeSet<>();
-    private static List<PurchasesRate> purchasesRates = new ArrayList<>();
+    private final Set<ChartFile> chartFiles = ImmutableSet.of(
+            new ChartFile("a001z190102"),
+            new ChartFile("c002z190103"),
+            new ChartFile("c003z190104")
+    );
 
-    @BeforeAll
-    static void init() {
-        chartFiles.add(new ChartFile("a001z190102"));
-        chartFiles.add(new ChartFile("c002z190103"));
-        chartFiles.add(new ChartFile("c003z190104"));
-        chartFiles.add(new ChartFile("h004z190105"));
-        chartFiles.add(new ChartFile("a005z190106"));
-        chartFiles.add(new ChartFile("c006z190107"));
-        chartFiles.add(new ChartFile("c007z190108"));
-        chartFiles.add(new ChartFile("c008z190109"));
-        chartFiles.add(new ChartFile("b009z190113"));
-        chartFiles.add(new ChartFile("c010z190115"));
-        purchasesRates.add(new PurchasesRate("euro", 1, CurrencyCode.EUR, 1L, 2L));
-        purchasesRates.add(new PurchasesRate("pound", 1, CurrencyCode.GBP, 1L, 3L));
-        purchasesRates.add(new PurchasesRate("dollar", 1, CurrencyCode.USD, 1L, 1L));
-    }
+    private final List<PurchasesRate> purchasesRates = ImmutableList.of(
+            new PurchasesRate("euro", 1, CurrencyCode.EUR, 1L, 2L),
+            new PurchasesRate("pound", 1, CurrencyCode.GBP, 1L, 3L),
+            new PurchasesRate("dollar", 1, CurrencyCode.USD, 1L, 1L)
+    );
 
     void shouldGetListOfCurrencyCharts() throws ParseException {}
 
@@ -63,9 +57,12 @@ public class CurrencyRateChartServiceTest {
         assertThat(chart.getPublicationDate()).isEqualTo(null);
         assertThat(chart.getCurrencies()).isEqualTo(purchasesRates);
         assertThat(chart.getType()).isEqualTo('c');
+        assertThat(chart.getUid()).isEqualTo("c003z190104");
     }
 
-    void shouldFail_WhenNotFindingCurrencyChart() {}
+    void shouldFail_WhenNotFindingCurrencyChart() throws ParseException {
+        Date date = FORMAT.parse("190103");
+    }
 
     void shouldFail_WhenFindingNoCurrencyCharts() {}
 }

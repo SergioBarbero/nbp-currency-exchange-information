@@ -6,10 +6,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.NavigableSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,7 +15,7 @@ public class NbpDirectoryClient implements DirectoryService {
     private final static String URL = "http://www.nbp.pl/kursy/xml/";
 
     @Override
-    public NavigableSet<ChartFile> findChartFiles(int year) {
+    public Set<ChartFile> findChartFiles(int year) {
         try {
             String filesText = new RestTemplate().getForObject(new URI(getUrl(year)), String.class);
             return Arrays.stream(filesText.substring(3).split("\r\n"))

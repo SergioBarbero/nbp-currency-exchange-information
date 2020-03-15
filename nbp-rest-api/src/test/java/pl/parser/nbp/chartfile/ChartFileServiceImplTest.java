@@ -1,15 +1,13 @@
 package pl.parser.nbp.chartfile;
 
+import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.NavigableSet;
-import java.util.Optional;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.*;
@@ -23,22 +21,18 @@ public class ChartFileServiceImplTest {
     protected DirectoryService directoryService = mock(DirectoryService.class);
     protected ChartFileService chartFileService = new ChartFileServiceImpl(directoryService);
 
-    protected static NavigableSet<ChartFile> chartFiles  = new TreeSet<>();
-
-    @BeforeAll
-    static void init() {
-        chartFiles.add(new ChartFile("a001z190102"));
-        chartFiles.add(new ChartFile("c002z190103"));
-        chartFiles.add(new ChartFile("c003z190104"));
-        chartFiles.add(new ChartFile("h004z190105"));
-        chartFiles.add(new ChartFile("a005z190106"));
-        chartFiles.add(new ChartFile("c006z190107"));
-        chartFiles.add(new ChartFile("c007z190108"));
-        chartFiles.add(new ChartFile("c008z190109"));
-        chartFiles.add(new ChartFile("b009z190113"));
-        chartFiles.add(new ChartFile("c010z190115"));
-    }
-
+    protected Set<ChartFile> chartFiles  = ImmutableSet.of(
+            new ChartFile("a001z190102"),
+            new ChartFile("c002z190103"),
+            new ChartFile("c003z190104"),
+            new ChartFile("h004z190105"),
+            new ChartFile("a005z190106"),
+            new ChartFile("c006z190107"),
+            new ChartFile("c007z190108"),
+            new ChartFile("c008z190109"),
+            new ChartFile("b009z190113"),
+            new ChartFile("c010z190115")
+    );
 
     @Test
     public void shouldThrowIllegalArgumentException_OnFindFilesBy_WhenPassedIncorrectDates() throws ParseException {
@@ -76,7 +70,7 @@ public class ChartFileServiceImplTest {
         Date to = FORMAT.parse("190110");
 
         // when
-        NavigableSet<ChartFile> files = chartFileService.findFilesBy(from, to, ChartType.c);
+        Set<ChartFile> files = chartFileService.findFilesBy(from, to, ChartType.c);
 
         // then
         assertThat(files).isNotNull();
@@ -93,7 +87,7 @@ public class ChartFileServiceImplTest {
         Date to = FORMAT.parse("190110");
 
         // when
-        NavigableSet<ChartFile> files = chartFileService.findFilesBy(from, to);
+        Set<ChartFile> files = chartFileService.findFilesBy(from, to);
 
         // then
         assertThat(files).isNotNull();

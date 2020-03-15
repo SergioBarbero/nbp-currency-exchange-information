@@ -33,7 +33,7 @@ public final class ChartFileServiceImpl implements ChartFileService {
     }
 
     @Override
-    public NavigableSet<ChartFile> findFilesBy(Date from, Date to, ChartType type) {
+    public Set<ChartFile> findFilesBy(Date from, Date to, ChartType type) {
         Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
         Assert.isTrue(from.after(LIMIT_DATE), "Dates must be in or after " + (getYearFromDate(LIMIT_DATE) + 1));
 
@@ -49,7 +49,7 @@ public final class ChartFileServiceImpl implements ChartFileService {
     }
 
     @Override
-    public NavigableSet<ChartFile> findFilesBy(Date from, Date to) {
+    public Set<ChartFile> findFilesBy(Date from, Date to) {
         Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
         Assert.isTrue(from.after(LIMIT_DATE), "Dates must be in or after " + (getYearFromDate(LIMIT_DATE) + 1));
 

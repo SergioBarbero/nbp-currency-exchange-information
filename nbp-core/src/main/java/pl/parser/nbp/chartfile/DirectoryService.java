@@ -1,7 +1,7 @@
 package pl.parser.nbp.chartfile;
 
-import java.util.NavigableSet;
+import java.util.Set;
 
 public interface DirectoryService {
-    NavigableSet<ChartFile> findChartFiles(int year);
+    Set<ChartFile> findChartFiles(int year);
 }
