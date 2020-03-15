@@ -10,21 +10,20 @@ import pl.parser.nbp.chartfile.ChartFileService;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class CurrencyRateChartController {
-    private final ChartFileService chartFileService;
+    private final CurrencyRateChartService currencyRateChartService;
 
-    public CurrencyRateChartController(ChartFileService ChartFileService) {
-        this.chartFileService = ChartFileService;
+    public CurrencyRateChartController(CurrencyRateChartService currencyRateChartService) {
+        this.currencyRateChartService = currencyRateChartService;
     }
 
     @GetMapping("/currency-chart/{date}/{type}")
     public CurrencyRateChart getCurrencyRateChart(
             @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
             @PathVariable("type") char type) {
-        return chartFileService.findFileBy(date, ChartType.valueOf(String.valueOf(type))).retrieveCurrencyRateChart();
+        return currencyRateChartService.getCurrencyRateChart(date, ChartType.valueOf(String.valueOf(type)));
     }
 
     @GetMapping("/currency-chart/{start-date}/{end-date}/{type}")
@@ -32,10 +31,6 @@ public class CurrencyRateChartController {
             @PathVariable("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @PathVariable("type") char type) {
-        return chartFileService
-                .findFilesBy(startDate, endDate, ChartType.valueOf(String.valueOf(type))).stream()
-                .filter(file -> ChartType.c.equals(file.getType()))
-                .map(ChartFile::retrieveCurrencyRateChart)
-                .collect(Collectors.toList());
+        return currencyRateChartService.getCurrencyRateCharts(startDate, endDate, ChartType.valueOf(String.valueOf(type)));
     }
 }

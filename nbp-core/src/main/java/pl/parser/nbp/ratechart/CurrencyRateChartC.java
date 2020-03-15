@@ -17,6 +17,13 @@ public class CurrencyRateChartC extends CurrencyRateChart {
 
     private List<PurchasesRate> currencies;
 
+    public CurrencyRateChartC(char type, String uid, Date listingDate, List<PurchasesRate> currencies) {
+        this.type = type;
+        this.uid = uid;
+        this.listingDate = listingDate;
+        this.currencies = currencies;
+    }
+
     @JsonProperty("type")
     public char getType() {
         return type;
