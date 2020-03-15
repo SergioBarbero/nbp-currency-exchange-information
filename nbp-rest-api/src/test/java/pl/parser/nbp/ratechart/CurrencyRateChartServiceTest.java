@@ -1,9 +1,5 @@
 package pl.parser.nbp.ratechart;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pl.parser.nbp.chartfile.ChartFile;
 import pl.parser.nbp.chartfile.ChartFileService;
@@ -12,7 +8,6 @@ import pl.parser.nbp.chartfile.FileNotFoundException;
 import pl.parser.nbp.rate.CurrencyCode;
 import pl.parser.nbp.rate.PurchasesRate;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,20 +25,43 @@ public class CurrencyRateChartServiceTest {
     private final ChartFileService chartFileService = mock(ChartFileService.class);
     private final CurrencyRateChartService currencyRateChartService = new CurrencyRateChartService(chartFileService);
 
-    private final Set<ChartFile> chartFiles = ImmutableSet.of(
-            new ChartFile("a001z190102"),
-            new ChartFile("c002z190103"),
-            new ChartFile("c003z190104")
-    );
-
-    private final List<PurchasesRate> purchasesRates = ImmutableList.of(
+    private final List<PurchasesRate> purchasesRates = List.of(
             new PurchasesRate("euro", 1, CurrencyCode.EUR, 1L, 2L),
             new PurchasesRate("pound", 1, CurrencyCode.GBP, 1L, 3L),
             new PurchasesRate("dollar", 1, CurrencyCode.USD, 1L, 1L)
     );
 
-    void shouldGetListOfCurrencyCharts() throws ParseException {
+    private final List<CurrencyRateChart> currencyRateCharts = List.of(
+            new CurrencyRateChartC('c', "a001z190102", FORMAT.parse("190103"), purchasesRates),
+            new CurrencyRateChartC('c', "a001z190102", FORMAT.parse("190104"), purchasesRates),
+            new CurrencyRateChartC('c', "a001z190102", FORMAT.parse("190105"), purchasesRates)
+    );
 
+    public CurrencyRateChartServiceTest() throws ParseException {}
+
+    @Test
+    void shouldGetListOfCurrencyCharts() throws ParseException {
+        // given
+        Date from = FORMAT.parse("190103");
+        Date to = FORMAT.parse("190107");
+
+        ChartFile chartFile1 = mock(ChartFile.class);
+        ChartFile chartFile2 = mock(ChartFile.class);
+        ChartFile chartFile3 = mock(ChartFile.class);
+        given(chartFileService.findFilesBy(from, to, ChartType.c)).willReturn(Set.of(chartFile1, chartFile2, chartFile3));
+
+        given(chartFile1.retrieveCurrencyRateChart()).willReturn(currencyRateCharts.get(0));
+        given(chartFile2.retrieveCurrencyRateChart()).willReturn(currencyRateCharts.get(1));
+        given(chartFile3.retrieveCurrencyRateChart()).willReturn(currencyRateCharts.get(2));
+
+        // when
+        List<CurrencyRateChart> currencyRateCharts = currencyRateChartService.getCurrencyRateCharts(from, to, ChartType.c);
+
+        // then
+        assertThat(currencyRateCharts.size()).isEqualTo(3);
+        assertThat(currencyRateCharts.get(0)).isInstanceOf(CurrencyRateChartC.class);
+        assertThat(currencyRateCharts.get(1)).isInstanceOf(CurrencyRateChartC.class);
+        assertThat(currencyRateCharts.get(2)).isInstanceOf(CurrencyRateChartC.class);
     }
 
     @Test

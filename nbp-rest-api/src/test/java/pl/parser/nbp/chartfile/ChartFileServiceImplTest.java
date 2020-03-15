@@ -1,7 +1,5 @@
 package pl.parser.nbp.chartfile;
 
-import com.google.common.collect.ImmutableSet;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.text.DateFormat;
@@ -21,7 +19,7 @@ public class ChartFileServiceImplTest {
     protected DirectoryService directoryService = mock(DirectoryService.class);
     protected ChartFileService chartFileService = new ChartFileServiceImpl(directoryService);
 
-    protected Set<ChartFile> chartFiles  = ImmutableSet.of(
+    protected Set<ChartFile> chartFiles  = Set.of(
             new ChartFile("a001z190102"),
             new ChartFile("c002z190103"),
             new ChartFile("c003z190104"),

@@ -31,7 +31,6 @@ public class CurrencyRateChartService {
 
     public List<CurrencyRateChart> getCurrencyRateCharts(Date startDate, Date endDate, ChartType type) {
         List<CurrencyRateChart> currencyRateCharts = chartFileService.findFilesBy(startDate, endDate, type).stream()
-                .filter(file -> ChartType.c.equals(file.getType()))
                 .map(ChartFile::retrieveCurrencyRateChart)
                 .collect(Collectors.toList());
         if (currencyRateCharts.isEmpty()) {
