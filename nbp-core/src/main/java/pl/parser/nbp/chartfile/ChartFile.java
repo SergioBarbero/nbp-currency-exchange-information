@@ -53,7 +53,8 @@ public final class ChartFile implements Comparable<ChartFile> {
         Assert.isTrue(this.type.equals(ChartType.c), "This kind of chart is not allowed");
         CurrencyRateChartC currencyRateChartC;
         try {
-            currencyRateChartC = XML_MAPPER.readValue(new URL(this.getUrl()), CurrencyRateChartC.class);
+            URL src = new URL(this.getUrl());
+            currencyRateChartC = XML_MAPPER.readValue(src, CurrencyRateChartC.class);
         } catch (IOException e) {
             throw new ChartNotLoadedException("Chart file " + this.getFileName() + " couldn't be loaded");
         }

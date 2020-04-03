@@ -17,6 +17,8 @@ public class CurrencyRateChartC extends CurrencyRateChart {
 
     private List<PurchasesRate> currencies;
 
+    public CurrencyRateChartC() {}
+
     public CurrencyRateChartC(char type, String uid, Date listingDate, List<PurchasesRate> currencies) {
         this.type = type;
         this.uid = uid;
