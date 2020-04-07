@@ -2,8 +2,11 @@ package pl.parser.nbp.currencyStatistics;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.parser.nbp.chartfile.ChartFile;
 import pl.parser.nbp.chartfile.ChartType;
@@ -23,7 +26,8 @@ public class CurrencyStatisticsController {
     private ChartFileService ChartFileService;
 
     @GetMapping("/statistics/{start-date}/{end-date}/{currency}")
-    public CurrencyStatistics getStatisticsForRangeAndType(
+    @ResponseBody
+    public ResponseEntity<CurrencyStatistics> getStatisticsForRangeAndType(
             @PathVariable("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @PathVariable("currency") String currencyCode) {
@@ -36,7 +40,8 @@ public class CurrencyStatisticsController {
                 .collect(Collectors.toList());
         double[] buyingRates = rates.stream().mapToDouble(PurchasesRate::getBuyingRate).toArray();
         double[] sellingRates = rates.stream().mapToDouble(PurchasesRate::getSellingRate).toArray();
-        return new CurrencyStatistics(new RateStatistics(buyingRates), new RateStatistics(sellingRates));
+        CurrencyStatistics currencyStatistics = new CurrencyStatistics(new RateStatistics(buyingRates), new RateStatistics(sellingRates));
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(currencyStatistics);
     }
 
 }
