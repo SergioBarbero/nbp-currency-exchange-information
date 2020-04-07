@@ -29,9 +29,10 @@ public class CurrencyRateChartService {
                 .orElseThrow(() -> new FileNotFoundException("Chart from " + PUBLICATION_DATE_FORMAT.format(date) + " was not found"));
     }
 
-    public List<CurrencyRateChart> getCurrencyRateCharts(Date startDate, Date endDate, ChartType type) {
-        List<CurrencyRateChart> currencyRateCharts = chartFileService.findFilesBy(startDate, endDate, type).stream()
+    public List<CurrencyRateChartC> getCurrencyRateCharts(Date startDate, Date endDate, ChartType type) {
+        List<CurrencyRateChartC> currencyRateCharts = chartFileService.findFilesBy(startDate, endDate, type).stream()
                 .map(ChartFile::retrieveCurrencyRateChart)
+                .map(CurrencyRateChartC.class::cast)
                 .collect(Collectors.toList());
         if (currencyRateCharts.isEmpty()) {
             throw new FileNotFoundException("There was no charts from "

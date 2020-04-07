@@ -2,6 +2,7 @@ package pl.parser.nbp.ratechart;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import pl.parser.nbp.rate.CurrencyCode;
 import pl.parser.nbp.rate.PurchasesRate;
 
 import java.util.Date;
@@ -66,7 +67,7 @@ public class CurrencyRateChartC extends CurrencyRateChart {
         this.currencies = currencies;
     }
 
-    public PurchasesRate getRateByCurrency(String currencyCode) {
+    public PurchasesRate getRateByCurrency(CurrencyCode currencyCode) {
         return this.getCurrencies().stream().filter(PurchasesRate -> PurchasesRate.getCurrencyCode().equals(currencyCode)).findFirst().get();
     }
 }

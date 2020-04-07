@@ -55,7 +55,7 @@ public class CurrencyRateChartServiceTest {
         given(chartFile3.retrieveCurrencyRateChart()).willReturn(currencyRateCharts.get(2));
 
         // when
-        List<CurrencyRateChart> currencyRateCharts = currencyRateChartService.getCurrencyRateCharts(from, to, ChartType.c);
+        List<CurrencyRateChartC> currencyRateCharts = currencyRateChartService.getCurrencyRateCharts(from, to, ChartType.c);
 
         // then
         assertThat(currencyRateCharts.size()).isEqualTo(3);

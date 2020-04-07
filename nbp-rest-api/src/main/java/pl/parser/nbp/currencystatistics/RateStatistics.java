@@ -1,4 +1,4 @@
-package pl.parser.nbp.currencyStatistics;
+package pl.parser.nbp.currencystatistics;
 
 import pl.parser.nbp.util.MathStatisticsUtil;
 

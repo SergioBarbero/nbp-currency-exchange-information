@@ -33,11 +33,11 @@ public class CurrencyRateChartController {
 
     @GetMapping("/currency-chart/{start-date}/{end-date}/{type}")
     @ResponseBody
-    public ResponseEntity<List<CurrencyRateChart>> getCurrencyRateCharts(
+    public ResponseEntity<List<CurrencyRateChartC>> getCurrencyRateCharts(
             @PathVariable("start-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @PathVariable("end-date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             @PathVariable("type") char type) {
-        List<CurrencyRateChart> currencyRateCharts = currencyRateChartService.getCurrencyRateCharts(startDate, endDate, ChartType.valueOf(String.valueOf(type)));
+        List<CurrencyRateChartC> currencyRateCharts = currencyRateChartService.getCurrencyRateCharts(startDate, endDate, ChartType.valueOf(String.valueOf(type)));
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(currencyRateCharts);
     }
 }

@@ -1,4 +1,4 @@
-package pl.parser.nbp.currencyStatistics;
+package pl.parser.nbp.currencystatistics;
 
 public class CurrencyStatistics {
 
