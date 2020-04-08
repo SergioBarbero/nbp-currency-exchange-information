@@ -1,9 +1,8 @@
 package pl.parser.nbp.chartfile;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -13,7 +12,6 @@ import static pl.parser.nbp.util.DateUtil.*;
 @Service
 public final class ChartFileServiceImpl implements ChartFileService {
 
-    private final static DateFormat PUBLICATION_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private final static Date LIMIT_DATE = new GregorianCalendar(2001, Calendar.DECEMBER, 31).getTime();
 
     private final DirectoryService directoryService;

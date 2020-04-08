@@ -1,7 +1,6 @@
 package pl.parser.nbp.currencystatistics;
 
 import org.springframework.stereotype.Service;
-import pl.parser.nbp.chartfile.ChartType;
 import pl.parser.nbp.rate.CurrencyCode;
 import pl.parser.nbp.rate.PurchasesRate;
 import pl.parser.nbp.ratechart.CurrencyRateChartService;

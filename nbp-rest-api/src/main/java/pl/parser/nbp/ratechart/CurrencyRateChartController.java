@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.parser.nbp.chartfile.ChartFile;
-import pl.parser.nbp.chartfile.ChartType;
-import pl.parser.nbp.chartfile.ChartFileService;
 
 import java.util.Date;
 import java.util.List;
