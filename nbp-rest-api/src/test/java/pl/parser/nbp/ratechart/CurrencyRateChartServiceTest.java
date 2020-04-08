@@ -55,7 +55,7 @@ public class CurrencyRateChartServiceTest {
         given(chartFile3.retrieveCurrencyRateChart()).willReturn(currencyRateCharts.get(2));
 
         // when
-        List<CurrencyRateChartC> currencyRateCharts = currencyRateChartService.getCurrencyRateCharts(from, to, ChartType.c);
+        List<CurrencyRateChartC> currencyRateCharts = currencyRateChartService.getCurrencyRateCharts(from, to);
 
         // then
         assertThat(currencyRateCharts.size()).isEqualTo(3);
@@ -73,7 +73,7 @@ public class CurrencyRateChartServiceTest {
         given(chartFileService.findFileBy(date, ChartType.c).get().retrieveCurrencyRateChart()).willReturn(currencyRateChart);
 
         // when
-        CurrencyRateChartC chart = (CurrencyRateChartC) currencyRateChartService.getCurrencyRateChart(date, ChartType.c);
+        CurrencyRateChartC chart = (CurrencyRateChartC) currencyRateChartService.getCurrencyRateChart(date);
 
         // then
         assertThat(chart.getChartNumber()).isEqualTo(null);
@@ -89,7 +89,7 @@ public class CurrencyRateChartServiceTest {
         given(chartFileService.findFileBy(date, ChartType.c)).willReturn(Optional.empty());
 
         assertThatExceptionOfType(FileNotFoundException.class)
-                .isThrownBy(() -> currencyRateChartService.getCurrencyRateChart(date, ChartType.c))
+                .isThrownBy(() -> currencyRateChartService.getCurrencyRateChart(date))
                 .withMessage("Chart from 2019-01-03 was not found");
     }
 
@@ -101,7 +101,7 @@ public class CurrencyRateChartServiceTest {
         given(chartFileService.findFilesBy(from, to, ChartType.c)).willReturn(new HashSet<>());
 
         assertThatExceptionOfType(FileNotFoundException.class)
-                .isThrownBy(() -> currencyRateChartService.getCurrencyRateCharts(from, to, ChartType.c))
+                .isThrownBy(() -> currencyRateChartService.getCurrencyRateCharts(from, to))
                 .withMessage("There was no charts from 2019-01-03 to 2019-01-07");
 
     }

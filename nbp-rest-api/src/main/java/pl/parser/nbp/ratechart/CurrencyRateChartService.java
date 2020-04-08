@@ -23,14 +23,14 @@ public class CurrencyRateChartService {
         this.chartFileService = chartFileService;
     }
 
-    public CurrencyRateChart getCurrencyRateChart(Date date, ChartType type) {
+    public CurrencyRateChart getCurrencyRateChart(Date date) {
         return chartFileService
-                .findFileBy(date, type).map(ChartFile::retrieveCurrencyRateChart)
+                .findFileBy(date, ChartType.c).map(ChartFile::retrieveCurrencyRateChart)
                 .orElseThrow(() -> new FileNotFoundException("Chart from " + PUBLICATION_DATE_FORMAT.format(date) + " was not found"));
     }
 
-    public List<CurrencyRateChartC> getCurrencyRateCharts(Date startDate, Date endDate, ChartType type) {
-        List<CurrencyRateChartC> currencyRateCharts = chartFileService.findFilesBy(startDate, endDate, type).stream()
+    public List<CurrencyRateChartC> getCurrencyRateCharts(Date startDate, Date endDate) {
+        List<CurrencyRateChartC> currencyRateCharts = chartFileService.findFilesBy(startDate, endDate, ChartType.c).stream()
                 .map(ChartFile::retrieveCurrencyRateChart)
                 .map(CurrencyRateChartC.class::cast)
                 .collect(Collectors.toList());

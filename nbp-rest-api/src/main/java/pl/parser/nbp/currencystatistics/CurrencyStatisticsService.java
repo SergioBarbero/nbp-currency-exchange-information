@@ -28,7 +28,7 @@ public class CurrencyStatisticsService {
     }
 
     private List<PurchasesRate> getPurchasesRates(Date startDate, Date endDate, CurrencyCode currencyCode) {
-        return currencyRateChartService.getCurrencyRateCharts(startDate, endDate, ChartType.c)
+        return currencyRateChartService.getCurrencyRateCharts(startDate, endDate)
                     .stream()
                     .map(chart -> chart.getRateByCurrency(currencyCode))
                     .collect(Collectors.toList());

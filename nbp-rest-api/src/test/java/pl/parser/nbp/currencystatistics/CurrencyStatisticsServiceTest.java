@@ -43,7 +43,7 @@ public class CurrencyStatisticsServiceTest {
         CurrencyStatisticsService currencyStatisticsService = new CurrencyStatisticsService(chartFileService);
         Date from = FORMAT.parse("190103");
         Date to = FORMAT.parse("190115");
-        given(chartFileService.getCurrencyRateCharts(from, to, ChartType.c)).willReturn(currencyRateCharts);
+        given(chartFileService.getCurrencyRateCharts(from, to)).willReturn(currencyRateCharts);
 
         // when
         CurrencyStatistics statistics = currencyStatisticsService.getStatisticsInRangeAndType(from, to, CurrencyCode.EUR);
