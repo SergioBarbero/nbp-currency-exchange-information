@@ -14,7 +14,7 @@ steps:
       - '--image'
       - 'eu.gcr.io/nbp-application/nbp-application:$COMMIT_SHA'
       - '--region'
-      - 'europe-west4-a'
+      - 'europe-west4'
       - '--platform'
       - 'managed'
 images:
