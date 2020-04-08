@@ -14,14 +14,6 @@ public interface ChartFileService {
     Optional<ChartFile> findFileBy(Date date, ChartType type);
 
     /**
-     * Find files from date to date
-     * @param from Date low threshold
-     * @param to Date high threshold
-     * @return Set<ChartFile> returned
-     */
-    Set<ChartFile> findFilesBy(Date from, Date to);
-
-    /**
      * Find files from date to date and a type
      * @param from Date low threshold
      * @param to Date high threshold

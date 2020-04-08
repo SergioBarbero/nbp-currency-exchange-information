@@ -48,19 +48,4 @@ public final class ChartFileServiceImpl implements ChartFileService {
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 
-    @Override
-    public Set<ChartFile> findFilesBy(Date from, Date to) {
-        Assert.isTrue(from.before(to) || from.equals(to), "First date introduced must be before or equals the second");
-        Assert.isTrue(from.after(LIMIT_DATE), "Dates must be in or after " + (getYearFromDate(LIMIT_DATE) + 1));
-
-        int fromYear = getYearFromDate(from);
-        int toYear = getYearFromDate(to);
-
-        return IntStream.rangeClosed(fromYear, toYear)
-                .mapToObj(directoryService::findChartFiles)
-                .flatMap(Collection::stream)
-                .filter(file -> file.getPublicationDate().after(from) && file.getPublicationDate().before(to))
-                .collect(Collectors.toCollection(TreeSet::new));
-    }
-
 }

@@ -78,21 +78,6 @@ public class ChartFileServiceImplTest {
     }
 
     @Test
-    void shouldFindFilesByDates() throws ParseException {
-        // given
-        when(directoryService.findChartFiles(2019)).thenReturn(chartFiles);
-        Date from = FORMAT.parse("190103");
-        Date to = FORMAT.parse("190110");
-
-        // when
-        Set<ChartFile> files = chartFileService.findFilesBy(from, to);
-
-        // then
-        assertThat(files).isNotNull();
-        assertThat(files.size()).isEqualTo(6);
-    }
-
-    @Test
     void shouldThrowIllegalArgumentException_OnFindFileBy_WhenPassedIncorrectDate() throws ParseException {
         // given
         Date date = FORMAT.parse("010110");
