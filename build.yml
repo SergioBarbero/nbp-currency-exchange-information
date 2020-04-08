@@ -17,5 +17,6 @@ steps:
       - 'europe-west4'
       - '--platform'
       - 'managed'
+      - '--allow-unauthenticated'
 images:
   - eu.gcr.io/nbp-application/nbp-application
