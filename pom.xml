@@ -78,7 +78,7 @@
     </build>
 
     <modules>
-        <module>nbp-rest-api</module>
+        <module>nbp-application</module>
         <module>nbp-core</module>
     </modules>
 </project>

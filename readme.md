@@ -11,7 +11,7 @@ It exposes an user friendly REST API.
 Make sure that you're building and running with Java 12 (either Oracle or OpenJDK)
 
 1. Run ``mvn package`` to build 
-2. Run ``java -jar "path to the jar"`` JAR will be available in ``nbp-rest-api/target/nbp-rest-api-${version}.jar``
+2. Run ``java -jar "path to the jar"`` JAR will be available in ``nbp-application/target/nbp-application-${version}.jar``
 
 ## By Docker Image
 

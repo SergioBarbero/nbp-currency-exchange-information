@@ -9,7 +9,7 @@
         <artifactId>nbp-PurchasesRate-exchange-information</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>nbp-rest-api</artifactId>
+    <artifactId>nbp-application</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
         <dependency>

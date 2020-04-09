@@ -4,6 +4,6 @@ COPY . .
 RUN mvn package
 
 FROM openjdk:12-jdk-alpine
-COPY --from=build /app/nbp-rest-api/target/nbp-rest-api-*.jar /usr/local/lib/nbp-app.jar
+COPY --from=build /app/nbp-application/target/nbp-application-*.jar /usr/local/lib/nbp-app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/usr/local/lib/nbp-app.jar"]
